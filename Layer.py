@@ -1,4 +1,5 @@
 from Node import Node
+import numpy as np
 
 
 class Layer(object):
@@ -11,12 +12,10 @@ class Layer(object):
         self.activation = activation
 
     def apply_activation(self, data):
-        result = []
         if self.activation == 'relu':
-            for d in data:
-                result.append(max(d, 0))
-
-        return result
+            return np.array([max(d, 0) for d in data])
+        else:
+            raise Exception("Unknow activation function!")
 
     def compute(self, inputs):
         """
