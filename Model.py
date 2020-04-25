@@ -2,6 +2,7 @@ from Node import Node
 from Layer import Layer
 import numpy as np
 from copy import copy
+import math
 
 
 class Model(object):
@@ -14,19 +15,23 @@ class Model(object):
 
     def fit(self, x, y, epochs, batch_size=1, shuffle=True):
 
-        num_batches = len(x)//batch_size
+        num_batches = math.ceil(len(x)/batch_size)
 
-        for i in range(num_batches):
-            if (i+1)*batch_size < len(x):
-                batch_x = x[i*batch_size:(i+1)*batch_size]
-            else:
-                batch_x = x[i*batch_size:]
+        for epoch in range(epochs):
+            for i in range(num_batches):
+                if (i+1)*batch_size < len(x):
+                    batch_x = x[i*batch_size:(i+1)*batch_size]
+                    batch_y = y[i*batch_size:(i+1)*batch_size]
+                else:
+                    batch_x = x[i*batch_size:]
+                    batch_y = y[i*batch_size:]
 
-            for j, batch in enumerate(batch_x):
-                b = batch.copy()
-                for k, l in enumerate(self.layers):
-                    b = l.compute_layer(b)
-                    print("BATCH IDX:", i, "BATCH ELE:", j, "LAYER:", k)
+                for i, x, y in enumerate(zip(batch_x, batch_y)):
+                    b = x.copy()
+                    for k, l in enumerate(self.layers):
+                        b = l.compute_layer(b)
+                        print("EPOCH:", epoch, "BATCH IDX:",
+                              i, "BATCH ELE:", j, "LAYER:", k)
 
         return b
 
@@ -43,8 +48,9 @@ if __name__ == "__main__":
     model = Model()
     model.add(Layer(4, 4))
     model.add(Layer(6, 4))
-    model.add(Layer(5, 6))
+    model.add(Layer(3, 6))
     print(model)
+
     input_ = np.asarray([
         [1, 2, 3, 4],
         [5, 6, 7, 8],
@@ -52,4 +58,11 @@ if __name__ == "__main__":
         [13, 14, 15, 16]
     ])
 
-    model.fit(input_, [], 1, 2)
+    output = np.asarray([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [10, 11, 12],
+    ])
+
+    print(model.fit(input_, output, epochs=1, batch_size=3))
