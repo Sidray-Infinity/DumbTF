@@ -26,8 +26,8 @@ class Model(object):
                     batch_x = x[i*batch_size:]
                     batch_y = y[i*batch_size:]
 
-                for i, x, y in enumerate(zip(batch_x, batch_y)):
-                    b = x.copy()
+                for j, (x_ele, y_ele) in enumerate(zip(batch_x, batch_y)):
+                    b = x_ele.copy()
                     for k, l in enumerate(self.layers):
                         b = l.compute_layer(b)
                         print("EPOCH:", epoch, "BATCH IDX:",
@@ -65,4 +65,4 @@ if __name__ == "__main__":
         [10, 11, 12],
     ])
 
-    print(model.fit(input_, output, epochs=1, batch_size=3))
+    print(model.fit(input_, output, epochs=1, batch_size=2))
