@@ -13,7 +13,7 @@ class Layer(object):
         self.output = []
 
     def compute_layer(self, input_data):
-
+        self.output = []
         for node in self:
             self.output.append(node.compute(input_data))
 
@@ -22,3 +22,10 @@ class Layer(object):
     def __iter__(self):
         for node in self.nodes:
             yield node
+
+    def __str__(self):
+        return "NUM NODES: " + str(self.num_nodes)
+
+
+if __name__ == "__main__":
+    pass
