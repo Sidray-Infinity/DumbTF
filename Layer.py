@@ -1,14 +1,18 @@
 from Node import Node
 import numpy as np
+from Activations import ReLU, Sigmoid
 
 
 class Layer(object):
-    def __init__(self, num_nodes, input_shape, activation='relu'):
+    def __init__(self, num_nodes, input_shape, activation):
         super().__init__()
         self.num_nodes = num_nodes
         self.input_shape = input_shape
-        self.activation = activation
-        self.nodes = [Node(input_shape, activation)
+        self.activation = {
+            'relu': ReLU(),
+            'sigmoid': Sigmoid()
+        }[activation]
+        self.nodes = [Node(input_shape, self.activation)
                       for _ in range(self.num_nodes)]
         self.output = []
 
@@ -16,6 +20,12 @@ class Layer(object):
         self.output = []
         for node in self:
             self.output.append(node.compute(input_data))
+
+        """ -----------------------------------------------
+        For sigmoid/softmax activation, handle the sum == 1
+        if isinstance(self.activation, Sigmoid):
+            self.output /= sum(self.output)
+        ------------------------------------------------"""
 
         return np.array(self.output)
 

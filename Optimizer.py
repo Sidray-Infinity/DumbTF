@@ -1,11 +1,7 @@
 import numpy as np
 
 
-class Optimizer(object):
-    """
-    Implementation of stochastic gradient descent
-    """
-
+class SGD(object):
     def __init__(self):
         super().__init__()
 
