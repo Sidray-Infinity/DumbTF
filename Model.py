@@ -52,6 +52,10 @@ class Model(object):
                     batch_y = Y[i*batch_size:]
 
                 batch_loss = 0  # Thing to be minimized
+                batch_weight_grads = np.array(
+                    [np.zeros(l.weights.shape) for l in self.layers])
+                batch_biases_grads = np.array(
+                    [np.zeros(l.biases.shape) for l in self.layers])
 
                 for j, (x_ele, y_ele) in enumerate(zip(batch_x, batch_y)):
                     x = x_ele.copy()
@@ -62,7 +66,37 @@ class Model(object):
                               i, "BATCH ELE:", j, "LAYER:", k)
 
                     # Adding the loss of all elements of a batch
-                    batch_loss += np.array(self.loss_func(y_ele, x))
+                    x_loss = np.array(self.loss_func(y_ele, x))
+
+                    # Output layer error
+                    x_err = self.loss_func.der(y_ele, x) * \
+                        l.activation.der(l.weighted_sum)
+                    print("OP LAYER ERROR:", x_err)
+
+                    for i in range(len(self.layers)-1, -1, -1):
+                        if i != 0:
+                            batch_biases_grads[i] += x_err
+                            for k in range(len(self.layers[i-1])):
+                                batch_weight_grads[i][k] += \
+                                    self.layers[i-1].output*x_err
+
+                            x_err = (self.layers[i].weights.T @ x_err) * \
+                                self.layers[i].activation.der(
+                                    self.layers[i].weighted_sum)
+
+                        else:
+                            # How to handle the weights if input layer ??
+
+                            batch_biases_grads[i] += x_err
+                            for k in range(len(self.layers[i-1])):
+                                batch_weight_grads[i][k] += \
+                                    self.layers[i-1].output*x_err
+
+                            x_err = (self.layers[i].weights.T @ x_err) * \
+                                self.layers[i].activation.der(
+                                    self.layers[i].weighted_sum)
+
+                    batch_loss += x_loss
 
                 """---------------------------------------------------
                 - Finding the gradient wrt to batch loss.
