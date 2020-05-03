@@ -1,4 +1,3 @@
-from Node import Node
 import numpy as np
 from Activations import ReLU, Sigmoid
 
@@ -12,14 +11,15 @@ class Layer(object):
             'relu': ReLU(),
             'sigmoid': Sigmoid()
         }[activation]
-        self.nodes = [Node(input_shape, self.activation)
-                      for _ in range(self.num_nodes)]
+
+        self.weights = np.random.randn(self.num_nodes, input_shape)
+        self.biases = np.zeros(shape=self.num_nodes)
+        self.weighted_sum = np.empty(shape=self.num_nodes, dtype=float)
         self.output = []
 
     def compute_layer(self, input_data):
-        self.output = []
-        for node in self:
-            self.output.append(node.compute(input_data))
+        self.weighted_sum = self.weights @ input_data + self.biases
+        self.output = self.activation(self.weighted_sum)
 
         """ -----------------------------------------------
         For sigmoid/softmax activation, handle the sum == 1
@@ -27,10 +27,11 @@ class Layer(object):
             self.output /= sum(self.output)
         ------------------------------------------------"""
 
-        return np.array(self.output)
+        return self.output
 
     def __iter__(self):
-        for node in self.nodes:
+        # print(self.weights)
+        for node in zip(self.weights, self.biases):
             yield node
 
     def __str__(self):
@@ -38,4 +39,8 @@ class Layer(object):
 
 
 if __name__ == "__main__":
-    pass
+    a = np.array([13, 14, 15, 16])
+    l = Layer(3, 4, activation='relu')
+    l()
+    a = l.compute_layer(a)
+    print('\n', a)

@@ -6,9 +6,10 @@ class ReLU(object):
         super().__init__()
 
     def __call__(self, data):
-        return data if data > 0 else 0
+        data[data < 0] = 0
+        return data
 
-    def derivative(self, data):
+    def der(self, data):
         return 1 if data > 0 else 0
 
 
@@ -19,8 +20,9 @@ class Sigmoid(object):
     def __call__(self, data):
         return np.exp(data) / (np.exp(data) + 1)
 
-    def derivative(self, data):
-        return 1 if data > 0 else 0
+    def der(self, data):
+        return (np.exp(data) / (np.exp(data) + 1)) - \
+            (np.exp(2 * data) / (np.exp(data) + 1) ** 2)
 
 
 if __name__ == "__main__":

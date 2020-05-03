@@ -1,9 +1,8 @@
-from Node import Node
 from Layer import Layer
 import numpy as np
 from copy import copy
 from Losses import MAE, MSE
-from Optimizer import SGD
+from Optimizer import SGD, SimpleGD
 import math
 
 
@@ -29,35 +28,48 @@ class Model(object):
 
         if optimizer == "sgd":
             self.optimizer = SGD()
+        elif optimizer == "simple_sgd":
+            self.optimizer = SimpleGD()
 
     def forward_pass(self, data):
         """-----------------------------
         Shift the forward pass code here.
         ------------------------------"""
 
-    def fit(self, x, y, epochs, batch_size=1, shuffle=True):
+    def fit(self, X, Y, epochs, batch_size=1, shuffle=True, lr=0.001):
 
-        num_batches = math.ceil(len(x)/batch_size)
+        assert len(X) == len(Y)
+
+        num_batches = math.ceil(len(X)/batch_size)
 
         for epoch in range(epochs):
             for i in range(num_batches):
-                if (i+1)*batch_size < len(x):
-                    batch_x = x[i*batch_size:(i+1)*batch_size]
-                    batch_y = y[i*batch_size:(i+1)*batch_size]
+                if (i+1)*batch_size < len(X):
+                    batch_x = X[i*batch_size:(i+1)*batch_size]
+                    batch_y = Y[i*batch_size:(i+1)*batch_size]
                 else:
-                    batch_x = x[i*batch_size:]
-                    batch_y = y[i*batch_size:]
+                    batch_x = X[i*batch_size:]
+                    batch_y = Y[i*batch_size:]
+
+                batch_loss = 0  # Thing to be minimized
 
                 for j, (x_ele, y_ele) in enumerate(zip(batch_x, batch_y)):
-                    b = x_ele.copy()
+                    x = x_ele.copy()
+                    # Forward pass the data
                     for k, l in enumerate(self.layers):
-                        b = l.compute_layer(b)
+                        x = l.compute_layer(x)
                         print("EPOCH:", epoch, "BATCH IDX:",
                               i, "BATCH ELE:", j, "LAYER:", k)
 
-                    #self.loss_func(y_ele, b)
+                    # Adding the loss of all elements of a batch
+                    batch_loss += np.array(self.loss_func(y_ele, x))
 
-        return b
+                """---------------------------------------------------
+                - Finding the gradient wrt to batch loss.
+                - Trying to update the weights and biases based on the 
+                  gradients.
+                ---------------------------------------------------"""
+                batch_loss /= batch_size
 
     def __str__(self):
         ret = "------------------------------------------------\n"
@@ -79,7 +91,8 @@ if __name__ == "__main__":
         [1, 2, 3, 4],
         [5, 6, 7, 8],
         [9, 10, 11, 12],
-        [13, 14, 15, 16]
+        [13, 14, 15, 16],
+        [-1, -2, -3, -4]
     ])
 
     output = np.asarray([
@@ -87,8 +100,9 @@ if __name__ == "__main__":
         [4, 5, 6],
         [7, 8, 9],
         [10, 11, 12],
+        [-1, -2, -3]
     ])
 
-    model.compile(loss="mse", optimizer="sgd")
+    model.compile(loss="mse", optimizer="simple_sgd")
 
-    print(model.fit(input_, output, epochs=1, batch_size=2))
+    model.fit(input_, output, epochs=1, batch_size=2)

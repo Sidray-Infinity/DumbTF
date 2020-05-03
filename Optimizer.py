@@ -1,6 +1,11 @@
 import numpy as np
 
 
+class SimpleGD(object):
+    def __init__(self):
+        super().__init__()
+
+
 class SGD(object):
     def __init__(self):
         super().__init__()

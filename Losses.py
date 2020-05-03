@@ -18,13 +18,13 @@ class MSE(object):
         self.y_pred = y_pred
         self.y_true = y_true
 
-    def derivative(self, y_true, pred):
+    def der(self, y_true, pred):
         return pred - y_true
 
     def __call__(self, y_true, y_pred):
         # Accoring to https://brilliant.org/wiki/backpropagation/#$
         # Turns out, the 0.5 helps during back propagation
-        return 0.5 * np.sum(abs(y_true - y_pred) ** 2)
+        return 0.5 * (abs(y_true - y_pred) ** 2)
 
 
 if __name__ == "__main__":
