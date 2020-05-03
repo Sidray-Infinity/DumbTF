@@ -1,3 +1,5 @@
+from keras.datasets import mnist
+import warnings
 from Layer import Layer
 import numpy as np
 from copy import copy
@@ -67,8 +69,8 @@ class Model(object):
                     # Forward pass the data
                     for k, l in enumerate(self.layers):
                         x = l.compute_layer(x)
-                        print("EPOCH:", epoch, "BATCH IDX:",
-                              i, "BATCH ELE:", j, "LAYER:", k)
+                        # print("EPOCH:", epoch, "BATCH IDX:",
+                        #       i, "BATCH ELE:", j, "LAYER:", k)
 
                     # Adding the loss of all elements of a batch
                     x_loss = np.array(self.loss_func(y_ele, x))
@@ -76,7 +78,7 @@ class Model(object):
                     # Output layer error
                     x_err = self.loss_func.der(y_ele, x) * \
                         l.activation.der(l.weighted_sum)
-                    print("OP LAYER ERROR:", x_err)
+                    # print("OP LAYER ERROR:", x_err)
 
                     for i in range(len(self.layers)-1, 0, -1):
 
@@ -102,8 +104,11 @@ class Model(object):
                 batch_biases_grads /= batch_size
 
                 for i in range(len(self.layers)-1, 0, -1):
+
                     self.layers[i].weights -= lr * batch_weight_grads[i]
+
                     self.layers[i].biases -= lr * batch_biases_grads[i]
+                print(batch_loss.mean())
 
     def __str__(self):
         ret = "------------------------------------------------\n"
@@ -115,10 +120,13 @@ class Model(object):
 
 if __name__ == "__main__":
 
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    x_train = x_train.reshape((60000, 28*28))
+
     model = Model()
-    model.add(Layer(4, 4, activation='relu'))
-    model.add(Layer(6, 4, activation='relu'))
-    model.add(Layer(3, 6, activation='sigmoid'))
+    model.add(Layer(512, 28*28, activation='relu'))
+
+    model.add(Layer(10, 512, activation='sigmoid'))
     print(model)
 
     input_ = np.asarray([
@@ -139,4 +147,4 @@ if __name__ == "__main__":
 
     model.compile(loss="mse", optimizer="simple_sgd")
 
-    model.fit(input_, output, epochs=1, batch_size=2)
+    model.fit(x_train, y_train, epochs=10, batch_size=32, lr=0.01)
