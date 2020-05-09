@@ -1,5 +1,5 @@
 import numpy as np
-from Activations import ReLU, Sigmoid
+from Activations import ReLU, Sigmoid, Linear
 
 
 class Layer(object):
@@ -9,7 +9,8 @@ class Layer(object):
         self.input_shape = input_shape
         self.activation = {
             'relu': ReLU(),
-            'sigmoid': Sigmoid()
+            'sigmoid': Sigmoid(),
+            'linear': Linear()
         }[activation]
 
         self.weights = np.random.randn(self.num_nodes, input_shape)
@@ -18,14 +19,9 @@ class Layer(object):
         self.output = []
 
     def compute_layer(self, input_data):
+        # print(self.weights.shape, input_data.shape)
         self.weighted_sum = self.weights @ input_data + self.biases
         self.output = self.activation(self.weighted_sum)
-
-        """ -----------------------------------------------
-        For sigmoid/softmax activation, handle the sum == 1
-        if isinstance(self.activation, Sigmoid):
-            self.output /= sum(self.output)
-        ------------------------------------------------"""
 
         return self.output
 

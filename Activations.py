@@ -6,7 +6,7 @@ class ReLU(object):
         super().__init__()
 
     def __call__(self, data):
-        data[data <= 0] = 0
+        data[data < 0] = 0
         return data
 
     def der(self, data):
@@ -15,16 +15,45 @@ class ReLU(object):
         return data
 
 
-class Sigmoid(object):
+class Linear(object):
     def __init__(self):
         super().__init__()
 
     def __call__(self, data):
-        return 1 / (1 + np.exp(-data))
+        return data
 
     def der(self, data):
+        return 1
 
-        return (1 / (1 + np.exp(-data))) * (1 - 1 / (1 + np.exp(-data)))
+
+class Sigmoid(object):
+    def __init__(self):
+        super().__init__()
+
+    def sigmoid(self, data):
+        """
+        For numerical stability
+        """
+        for i in range(len(data)):
+            if data[i] < 0:
+                a = np.exp(data[i])
+                data[i] = a/(1+a)
+            else:
+                data[i] = 1 / (1 + np.exp(-data[i]))
+
+        """------------------------------------------------------------------------------------
+        - Contemplate whether to convert it to probability here, or in the __call__ function ??
+        ------------------------------------------------------------------------------------"""
+
+        data /= data.sum()
+        return data
+
+    def __call__(self, data):
+        data = self.sigmoid(data)
+        return data
+
+    def der(self, data):
+        return self.sigmoid(data) * (1 - self.sigmoid(data))
 
 
 if __name__ == "__main__":
