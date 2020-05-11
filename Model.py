@@ -5,7 +5,7 @@ from Layer import Layer
 import numpy as np
 from copy import copy
 from Losses import MAE, MSE
-from Optimizer import SGD, SimpleGD
+from Optimizer import SGD, MiniBatchGD
 import math
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -34,7 +34,7 @@ class Model(object):
 
         self.optimizer = {
             "sgd": SGD(),
-            "simple_sgd": SimpleGD()
+            "mini_batch_gd": MiniBatchGD()
         }[optimizer]
 
     def forward_pass(self, data):
@@ -73,22 +73,15 @@ class Model(object):
                     x = x_ele.copy()
                     # Forward pass the data
                     for k, l in enumerate(self.layers):
-                        # print("LAYER:", k, x)
-                        # input()
                         x = l.compute_layer(x)
-
                         # print("EPOCH:", epoch, "BATCH IDX:",
                         #       i, "BATCH ELE:", j, "LAYER:", k)
-                    # print(np.argmax(y_ele)+1, np.argmax(x)+1)
-                    # print(y_ele, x)
-                    # input()
-                    # Adding the loss of all elements of a batch
+
                     x_loss = np.array(self.loss_func(y_ele, x))
 
                     # Output layer error
                     x_err = self.loss_func.der(y_ele, x) * \
                         l.activation.der(l.weighted_sum)
-                    # print("OP LAYER ERROR:", x_err)
 
                     for i in range(len(self.layers)-1, 0, -1):
 
@@ -114,10 +107,9 @@ class Model(object):
                 batch_biases_grads /= batch_size
 
                 for i in range(len(self.layers)-1, 0, -1):
-
                     self.layers[i].weights -= lr * batch_weight_grads[i]
-
                     self.layers[i].biases -= lr * batch_biases_grads[i]
+
                 print(batch_loss.mean())
                 losses.append(batch_loss.mean())
 
@@ -133,49 +125,20 @@ class Model(object):
 
 if __name__ == "__main__":
 
-    # (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    # x_train = x_train.reshape((60000, 28*28))
-    # x_train = x_train.astype('float32')/255.
-    # y_train = to_categorical(y_train)
-
     model = Model()
     model.add(Layer(64, 13, activation='relu'))
     model.add(Layer(64, 64, activation='relu'))
     model.add(Layer(1, 64, activation='linear'))
     print(model)
 
-    # model_test = Model()
-    # model_test.add(Layer(4, 4, activation='relu'))
-    # model_test.add(Layer(6, 4, activation='relu'))
-    # model_test.add(Layer(6, 6, activation='relu'))
-    # model_test.add(Layer(3, 6, activation='sigmoid'))
-    # print(model_test)
-
     (train_x, train_y), (test_x, test_y) = boston_housing.load_data()
 
     train_x = normalize(train_x)
     test_x = normalize(test_x)
 
-    # input_ = np.asarray([
-    #     [1, 2, 3, 4],
-    #     [5, 6, 7, 8],
-    #     [9, 10, 11, 12],
-    #     [13, 14, 15, 16],
-    #     [-1, -2, -3, -4]
-    # ])
-
-    # output = np.asarray([
-    #     [1, 0, 0],
-    #     [1, 0, 0],
-    #     [0, 1, 0],
-    #     [0, 0, 1],
-    #     [0, 1, 0]
-    # ])
-
-    # model_test.compile(loss="mse", optimizer="simple_sgd")
-
-    # model_test.fit(input_, output, epochs=10, batch_size=2, lr=0.001)
-
-    model.compile(loss="mse", optimizer="sgd")
+    model.compile(loss="mse", optimizer="mini_batch_gd")
     print("Train_x", train_x.shape)
-    losses = model.fit(train_x, train_y, epochs=20, batch_size=16)
+    losses = model.fit(train_x, train_y, epochs=80, batch_size=16)
+
+    plt.plot(losses[3:])
+    plt.show()
