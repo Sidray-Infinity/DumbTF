@@ -56,6 +56,24 @@ class Sigmoid(object):
         return self.sigmoid(data) * (1 - self.sigmoid(data))
 
 
+class Softmax(object):
+    def __init__(self):
+        super().__init__()
+
+    def __call__(self, data):
+        """
+        * data -> Layer output 1D array
+        * For numerical stability
+        """
+        shift_data = data - np.max(data)
+        exps = np.exp(shift_data)
+        return exps/np.sum(exps)
+
+
+    def der(self):
+        pass
+
+
 if __name__ == "__main__":
 
     pass

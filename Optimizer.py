@@ -4,10 +4,6 @@ import numpy as np
 class MiniBatchGD(object):
     def __init__(self):
         super().__init__()
-        self.batch_weight_grads = np.array(
-            [np.zeros(l.weights.shape) for l in self.layers])
-        self.batch_biases_grads = np.array(
-            [np.zeros(l.biases.shape) for l in self.layers])
 
     def optimize(self, x_loss, x_err):
         """

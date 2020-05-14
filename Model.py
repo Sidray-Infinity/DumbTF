@@ -1,15 +1,9 @@
-
-from keras.datasets import boston_housing
-from sklearn.preprocessing import normalize
 from Layer import Layer
 import numpy as np
 from copy import copy
 from Losses import MAE, MSE
 from Optimizer import SGD, MiniBatchGD
-import math
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+from tqdm import tqdm
 
 
 class Model(object):
@@ -46,11 +40,11 @@ class Model(object):
 
         assert len(X) == len(Y)
 
-        num_batches = math.ceil(len(X)/batch_size)
+        num_batches = np.ceil(len(X)/batch_size)
         losses = []
         for epoch in range(epochs):
-            print("-"*30)
-            for i in range(num_batches):
+            print("EPOCH:", epoch)
+            for i in tqdm(range(num_batches)):
                 if (i+1)*batch_size < len(X):
                     batch_x = X[i*batch_size:(i+1)*batch_size]
                     batch_y = Y[i*batch_size:(i+1)*batch_size]
@@ -110,10 +104,21 @@ class Model(object):
                     self.layers[i].weights -= lr * batch_weight_grads[i]
                     self.layers[i].biases -= lr * batch_biases_grads[i]
 
-                print(batch_loss.mean())
                 losses.append(batch_loss.mean())
 
         return losses
+
+    def predict(self, test_x):
+        result = []
+
+        for x in test_x:
+            temp_x = x.copy()
+            for k, l in enumerate(self.layers):
+                temp_x = l.compute_layer(temp_x)
+
+            result.append(temp_x)
+
+        return np.asarray(result)
 
     def __str__(self):
         ret = "------------------------------------------------\n"
@@ -124,21 +129,4 @@ class Model(object):
 
 
 if __name__ == "__main__":
-
-    model = Model()
-    model.add(Layer(64, 13, activation='relu'))
-    model.add(Layer(64, 64, activation='relu'))
-    model.add(Layer(1, 64, activation='linear'))
-    print(model)
-
-    (train_x, train_y), (test_x, test_y) = boston_housing.load_data()
-
-    train_x = normalize(train_x)
-    test_x = normalize(test_x)
-
-    model.compile(loss="mse", optimizer="mini_batch_gd")
-    print("Train_x", train_x.shape)
-    losses = model.fit(train_x, train_y, epochs=80, batch_size=16)
-
-    plt.plot(losses[3:])
-    plt.show()
+    pass

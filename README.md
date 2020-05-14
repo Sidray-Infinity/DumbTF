@@ -16,3 +16,6 @@ Doesn't work though. Have patience. Was just learning to make packages.
 ## Status 
 ---
 * It's so good to see the loss going down for boston housing regression. :)
+* Keras vs DumbTF on boston housing. (Orange is keras)
+
+<img src="images/boston_housing.png"></img>

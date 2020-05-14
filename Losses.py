@@ -12,6 +12,12 @@ class MAE(object):
         return np.mean(abs(y_true - y_pred))
 
 
+class CategoricalCrossEntroy(object):
+
+    def __init__(self):
+        super().__init__()
+
+
 class MSE(object):
     def __init__(self, y_true=None, y_pred=None):
         super().__init__()
