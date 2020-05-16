@@ -14,8 +14,38 @@ class MAE(object):
 
 class CategoricalCrossEntroy(object):
 
-    def __init__(self):
+    def __init__(self, y_true=None, y_pred=None):
         super().__init__()
+        self.y_pred = y_pred
+        self.y_true = y_true
+
+    def der(self, y_true, y_pred):
+        """
+        The derivative wrt to the positive class and the negative class are different.
+        """
+        true_class_index = np.argmax(y_true)
+        pos_score = y_pred[true_class_index]
+        e_sum = np.sum(np.exp(y_pred))
+        der = []
+        for i in range(len(y_true)):
+            if i != true_class_index:
+                der.append(np.exp(y_pred[i])/e_sum)  # For all other classes
+            else:
+                # For the positive class
+                der.append(np.exp(pos_score)/e_sum - 1)
+
+        return np.array(der)
+
+    def __call__(self, y_true, y_pred):
+        """
+        * Ensure that the target vector is one-hot encoded
+        * Ensure that the final layer activation is softmax
+        """
+
+        pos_score = y_pred[np.argmax(y_true)]
+        e_sum = np.sum(np.exp(y_pred))
+
+        return -1 * np.log(np.exp(pos_score)/e_sum)
 
 
 class MSE(object):

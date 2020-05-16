@@ -1,7 +1,7 @@
 from Layer import Layer
 import numpy as np
 from copy import copy
-from Losses import MAE, MSE
+from Losses import MAE, MSE, CategoricalCrossEntroy
 from Optimizer import SGD, MiniBatchGD
 from tqdm import tqdm
 
@@ -23,7 +23,8 @@ class Model(object):
 
         self.loss_func = {
             "mae": MAE(),
-            "mse": MSE()
+            "mse": MSE(),
+            "cse": CategoricalCrossEntroy()
         }[loss]
 
         self.optimizer = {
