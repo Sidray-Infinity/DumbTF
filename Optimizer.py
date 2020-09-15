@@ -5,7 +5,7 @@ class MiniBatchGD(object):
     def __init__(self):
         super().__init__()
 
-    def optimize(self, x_loss, x_err):
+    def optimize(self, x_loss, x_err, batch_weight_grads, batch_biases_grads):
         """
         * x_loss -> loss of the forward pass
         * x_err -> Error of the final layer
