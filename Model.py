@@ -38,7 +38,6 @@ class Model(object):
 		num_batches = int(np.ceil(len(X)/batch_size))
 		losses = []
 		for epoch in range(epochs):
-			print("EPOCH:", epoch)
 			losse = 0
 			t = trange(num_batches)
 			# for i in tqdm(range(num_batches)):
@@ -96,8 +95,7 @@ class Model(object):
 					# -------------------------------------------------------------
 
 					batch_loss += x_loss
-					t.set_description("LOSS: {}".format(x_loss))
-					t.refresh()
+
 
 				"""---------------------------------------------------
 				- Finding the gradient wrt to batch loss.
@@ -109,18 +107,16 @@ class Model(object):
 				batch_biases_grads /= batch_size
 				lossb = batch_loss.mean()
 				losse += lossb
-				# print(lossb)
-				# t.set_description("LOSS: {}".format(lossb))
-				# t.refresh()
 
+				t.set_description(f"EPOCH: {epoch} LOSS: {lossb}".format(x_loss))
+				t.refresh()
 				# Update the weights & biases based on the calculated gradients
 	
 				for i in range(len(self.layers)-1, 0, -1):
 					self.layers[i].weights -= lr * batch_weight_grads[i]
 					self.layers[i].biases -= lr * batch_biases_grads[i]
 
-			losse /= batch_size
-			print(losse)
+			losse /= num_batches
 			losses.append(losse)
 		return np.asarray(losses)
 

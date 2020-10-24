@@ -13,7 +13,8 @@ class Dense(object):
             'linear': Linear()
         }[activation]
 
-        self.weights = np.random.randn(self.num_nodes, input_shape)
+        # He initialization
+        self.weights = np.random.randn(self.num_nodes, input_shape) * np.sqrt(2/input_shape)
         self.biases = np.zeros(shape=self.num_nodes)
         self.weighted_sum = np.empty(shape=self.num_nodes, dtype=float)
         self.output = []
