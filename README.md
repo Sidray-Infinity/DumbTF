@@ -19,3 +19,9 @@ Doesn't work though. Have patience. Was just learning to make packages.
 * Keras vs DumbTF on boston housing. (Orange is keras)
 
 <img src="images/boston_housing.png"></img>
+
+
+## References
+- http://neuralnetworksanddeeplearning.com/chap2.html
+- https://brilliant.org/wiki/backpropagation/#$
+- https://towardsdatascience.com/batch-mini-batch-stochastic-gradient-descent-7a62ecba642a

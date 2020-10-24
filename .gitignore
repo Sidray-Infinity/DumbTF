@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 thoughts.md
-Model.ipynb
+*.ipynb

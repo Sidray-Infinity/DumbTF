@@ -2,7 +2,7 @@ import numpy as np
 from Activations import ReLU, Sigmoid, Linear
 
 
-class Layer(object):
+class Dense(object):
     def __init__(self, num_nodes, input_shape, activation):
         super().__init__()
         self.num_nodes = num_nodes
@@ -31,12 +31,6 @@ class Layer(object):
             yield node
 
     def __str__(self):
-        return "NUM NODES: " + str(self.num_nodes)
+        return f"NUM NODES: {self.num_nodes}\nACTIVATON: {self.activation}" +\
+            f"INPUT SHAPE: {self.input_shape}"
 
-
-if __name__ == "__main__":
-    a = np.array([13, 14, 15, 16])
-    l = Layer(3, 4, activation='relu')
-    l()
-    a = l.compute_layer(a)
-    print('\n', a)

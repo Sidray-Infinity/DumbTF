@@ -34,7 +34,7 @@ class CategoricalCrossEntroy(object):
                 # For the positive class
                 der.append(np.exp(pos_score)/e_sum - 1)
 
-        return np.array(der)
+        return np.asarray(der)
 
     def __call__(self, y_true, y_pred):
         """
@@ -45,7 +45,7 @@ class CategoricalCrossEntroy(object):
         pos_score = y_pred[np.argmax(y_true)]
         e_sum = np.sum(np.exp(y_pred))
 
-        return -1 * np.log(np.exp(pos_score)/e_sum)
+        return np.asarray(-1 * np.log(np.exp(pos_score)/e_sum))
 
 
 class MSE(object):
@@ -55,12 +55,12 @@ class MSE(object):
         self.y_true = y_true
 
     def der(self, y_true, pred):
-        return pred - y_true
+        return np.asarray(pred - y_true)
 
     def __call__(self, y_true, y_pred):
         # Accoring to https://brilliant.org/wiki/backpropagation/#$
         # Turns out, the 0.5 helps during back propagation
-        return 0.5 * (abs(y_true - y_pred) ** 2)
+        return np.asarray(0.5 * ((y_true - y_pred) ** 2))
 
 
 if __name__ == "__main__":
