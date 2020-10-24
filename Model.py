@@ -40,7 +40,6 @@ class Model(object):
 		for epoch in range(epochs):
 			losse = 0
 			t = trange(num_batches)
-			# for i in tqdm(range(num_batches)):
 			for batch in t:
 				if (batch+1)*batch_size < len(X):
 					batch_x = X[batch*batch_size:(batch+1)*batch_size]
@@ -54,7 +53,7 @@ class Model(object):
 				batch_weight_grads = np.asarray([np.zeros(l.weights.shape) for l in self.layers])
 				batch_biases_grads = np.asarray([np.zeros(l.biases.shape) for l in self.layers])
 
-				for j, (x_ele, y_ele) in enumerate(zip(batch_x, batch_y)):
+				for (x_ele, y_ele) in zip(batch_x, batch_y):
 					x = x_ele.copy()
 
 					# Forward pass the data
@@ -72,15 +71,7 @@ class Model(object):
 					for i in range(len(self.layers)-1, 0, -1):
 
 						batch_biases_grads[i] += x_err
-
-						# for k1 in range(c):
-						# 	for k2 in range(self.layers[i].num_nodes):
-						# 		self.batch_weight_grads[i][k2] += \
-						# 			self.layers[i-1].output[k1]*x_err[k2]
-
-					
 						batch_weight_grads[i] += np.multiply.outer(x_err, self.layers[i-1].output)
-
 
 					    # Calculating error for the layer below
 						x_err = (self.layers[i].weights.T @ x_err) * \
@@ -106,6 +97,8 @@ class Model(object):
 				batch_weight_grads /= batch_size
 				batch_biases_grads /= batch_size
 				lossb = batch_loss.mean()
+				losses.append(lossb)
+
 				losse += lossb
 
 				t.set_description(f"EPOCH: {epoch} LOSS: {lossb}".format(x_loss))
@@ -117,7 +110,7 @@ class Model(object):
 					self.layers[i].biases -= lr * batch_biases_grads[i]
 
 			losse /= num_batches
-			losses.append(losse)
+			# losses.append(losse)
 		return np.asarray(losses)
 
 	def predict(self, test_x):

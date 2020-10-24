@@ -8,8 +8,15 @@ class MAE(object):
         self.y_pred = y_pred
         self.y_true = y_true
 
+    def der(self, y_true, y_pred):
+        ret = np.ones(y_pred.shape)
+        for i in range(y_pred.shape[0]):
+            if y_pred - y_true < 0:
+                ret[i]*= -1
+        return ret
+
     def __call__(self, y_true, y_pred):
-        return np.mean(abs(y_true - y_pred))
+        return abs(y_true - y_pred)
 
 
 class CategoricalCrossEntroy(object):
