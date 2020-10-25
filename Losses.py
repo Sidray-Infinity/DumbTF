@@ -18,6 +18,19 @@ class MAE(object):
     def __call__(self, y_true, y_pred):
         return abs(y_true - y_pred)
 
+class BinaryCrossEntropy(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, y_true, y_pred):
+        y = y_pred[0]
+        if y_pred[0] < 0:
+            y = np.nextafter(0,1)
+        return -1 * (y_true * np.log(y) + (1 - y_true) * np.log(1 - y))
+       
+
+    def der(self, y_true, y_pred):
+        return (y_pred - y_true) / (len(y_pred) * (y_pred - y_pred * y_pred))
 
 class CategoricalCrossEntroy(object):
 

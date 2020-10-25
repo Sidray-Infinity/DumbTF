@@ -1,7 +1,7 @@
-from Layer import Dense
+from Layer import Dense, Layer
 import numpy as np
 from copy import copy
-from Losses import MAE, MSE, CategoricalCrossEntroy
+from Losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
 from Optimizer import SGD, MiniBatchGD
 from tqdm import trange, tqdm
 
@@ -15,7 +15,7 @@ class Model(object):
 	def add(self, layer):
 		self.layers.append(layer)
 
-	def compile(self, loss, optimizer):
+	def compile(self, loss, optimizer, lr=0.01):
 		"""----------------------------------------------
 		Also include the weights initialization code here.
 		-----------------------------------------------"""
@@ -23,16 +23,17 @@ class Model(object):
 		self.loss_func = {
 			"mae": MAE(),
 			"mse": MSE(),
-			"cse": CategoricalCrossEntroy()
+			"cce": CategoricalCrossEntroy(),
+			"bce": BinaryCrossEntropy()
 		}[loss]
 
 		self.optimizer = {
 			"sgd": SGD(),
-			"mini_batch_gd": MiniBatchGD()
+			"mini_batch_gd": MiniBatchGD(layers=self.layers, lr=lr)
 		}[optimizer]
 
 
-	def fit(self, X, Y, epochs, batch_size=32, shuffle=True, lr=0.001):
+	def fit(self, X, Y, epochs, batch_size=32, shuffle=True):
 
 		assert len(X) == len(Y)
 		num_batches = int(np.ceil(len(X)/batch_size))
@@ -50,8 +51,7 @@ class Model(object):
 
 				batch_loss = 0  # Thing to be minimized
 
-				batch_weight_grads = np.asarray([np.zeros(l.weights.shape) for l in self.layers])
-				batch_biases_grads = np.asarray([np.zeros(l.biases.shape) for l in self.layers])
+				self.optimizer.reset_gradients()
 
 				for (x_ele, y_ele) in zip(batch_x, batch_y):
 					x = x_ele.copy()
@@ -62,40 +62,20 @@ class Model(object):
 
 					# Calculating the loss : y_ele -> Truth, x -> network output
 					x_loss = self.loss_func(y_ele, x)
+					batch_loss += x_loss
 
 					# Output layer error
 					x_err = self.loss_func.der(y_ele, x) * \
 						l.activation.der(l.weighted_sum)
 
+					self.optimizer.update_gradients(self.layers, x_err)
 
-					for i in range(len(self.layers)-1, 0, -1):
-
-						batch_biases_grads[i] += x_err
-						batch_weight_grads[i] += np.multiply.outer(x_err, self.layers[i-1].output)
-
-					    # Calculating error for the layer below
-						x_err = (self.layers[i].weights.T @ x_err) * \
-							self.layers[i-1].activation.der(
-							self.layers[i-1].weighted_sum)
-
-					# Update the weights & biases based on the calculated gradients
-					# ------------ FOR STOCHASTIC GRADIENT DESCENT ----------------
-					# for i in range(len(self.layers)-1, 0, -1):
-					# 	self.layers[i].weights -= lr * self.batch_weight_grads[i]
-					# 	self.layers[i].biases -= lr * self.batch_biases_grads[i]
-					# -------------------------------------------------------------
-
-					batch_loss += x_loss
+					# ---------- FOR STOCHASTIC GRADIENT DESCENT -------------
+					# self.optimizer.step(self.layers, 1)
+					# --------------------------------------------------------
 
 
-				"""---------------------------------------------------
-				- Finding the gradient wrt to batch loss.
-				- Trying to update the weights and biases based on the
-					gradients.
-				---------------------------------------------------"""
 				batch_loss /= batch_size
-				batch_weight_grads /= batch_size
-				batch_biases_grads /= batch_size
 				lossb = batch_loss.mean()
 				losses.append(lossb)
 
@@ -103,14 +83,12 @@ class Model(object):
 
 				t.set_description(f"EPOCH: {epoch} LOSS: {lossb}".format(x_loss))
 				t.refresh()
+
 				# Update the weights & biases based on the calculated gradients
-	
-				for i in range(len(self.layers)-1, 0, -1):
-					self.layers[i].weights -= lr * batch_weight_grads[i]
-					self.layers[i].biases -= lr * batch_biases_grads[i]
+				self.optimizer.step(self.layers, len(batch_x))
 
 			losse /= num_batches
-			# losses.append(losse)
+			
 		return np.asarray(losses)
 
 	def predict(self, test_x):

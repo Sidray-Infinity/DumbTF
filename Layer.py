@@ -1,10 +1,14 @@
 import numpy as np
 from Activations import ReLU, Sigmoid, Linear
 
-
-class Dense(object):
-    def __init__(self, num_nodes, input_shape, activation):
+class Layer(object):
+    def __init__():
         super().__init__()
+
+
+class Dense(Layer):
+    def __init__(self, num_nodes, input_shape, activation):
+        # super().__init__()
         self.num_nodes = num_nodes
         self.input_shape = input_shape
         self.activation = {

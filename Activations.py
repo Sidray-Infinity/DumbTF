@@ -40,7 +40,6 @@ class Sigmoid(object):
             else:
                 data[i] = 1 / (1 + np.exp(-data[i]))
 
-        data /= data.sum()
         return data
 
     def __call__(self, data):
