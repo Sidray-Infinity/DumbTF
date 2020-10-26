@@ -9,11 +9,7 @@ class ReLU(object):
         return np.maximum(0, data)
 
     def der(self, data):
-        # data[data <= 0] = 0
-        # data[data > 0] = 1
-        # return data
-        # if np.isnan(np.sum(data)):
-        #     data[np.isnan(data)] = 0.0
+
         data = np.maximum(0, data)
         data[data > 0] = 1
         return data

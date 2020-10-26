@@ -4,9 +4,8 @@ A deep learning library for dumb people.
 
 ## Focus
 ---
-- Current focus is to create a dense network, to train MNIST.
-- I was wrong. It's better to work on a regression problem first, because
-  of the simple loss function.
+- Implement Categorical cross entropy (with it's sparse version)
+- Implement convolution layers
 
 ## Installation
 `pip install Dumb-TF`
@@ -15,6 +14,8 @@ Doesn't work though. Have patience. Was just learning to make packages.
 
 ## Status 
 ---
+* Works well for regression.
+* Implemented binary cross entropy - not satisfactory
 * It's so good to see the loss going down for boston housing regression. :)
 * Keras vs DumbTF on boston housing. (Orange is keras)
 
