@@ -9,7 +9,12 @@ class ReLU(object):
         return np.maximum(0, data)
 
     def der(self, data):
-        data[data <= 0] = 0
+        # data[data <= 0] = 0
+        # data[data > 0] = 1
+        # return data
+        # if np.isnan(np.sum(data)):
+        #     data[np.isnan(data)] = 0.0
+        data = np.maximum(0, data)
         data[data > 0] = 1
         return data
 
@@ -33,21 +38,26 @@ class Sigmoid(object):
         """
         For numerical stability
         """
+        sig = np.zeros_like(data)
         for i in range(len(data)):
             if data[i] < 0:
                 a = np.exp(data[i])
-                data[i] = a/(1+a)
+                sig[i] = a/(1+a)
             else:
-                data[i] = 1 / (1 + np.exp(-data[i]))
+                sig[i] = 1 / (1 + np.exp(-data[i]))
 
-        return data
+  
+        sig = np.minimum(sig, 0.999999)  # Set upper bound
+        sig = np.maximum(sig, 0.000001)  # Set lower bound
+        return sig
+
 
     def __call__(self, data):
         return self.sigmoid(data)
 
 
     def der(self, data):
-        return self.sigmoid(data) * (1 - self.sigmoid(data))
+        return self.sigmoid(data) * (1.0 - self.sigmoid(data))
 
 
 class Softmax(object):

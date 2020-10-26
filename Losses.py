@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class MAE(object):
     def __init__(self, y_true=None, y_pred=None):
 
@@ -23,14 +22,16 @@ class BinaryCrossEntropy(object):
         pass
 
     def __call__(self, y_true, y_pred):
-        y = y_pred[0]
-        if y_pred[0] < 0:
-            y = np.nextafter(0,1)
-        return -1 * (y_true * np.log(y) + (1 - y_true) * np.log(1 - y))
-       
+
+        if y_true == 1:
+            return -np.log(y_pred[0])
+        
+        return -np.log(1 - y_pred[0])
+
 
     def der(self, y_true, y_pred):
-        return (y_pred - y_true) / (len(y_pred) * (y_pred - y_pred * y_pred))
+  
+        return (y_pred[0] - y_true) / (y_pred[0] - y_pred[0] * y_pred[0])
 
 class CategoricalCrossEntroy(object):
 
