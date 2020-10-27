@@ -1,5 +1,5 @@
 import numpy as np
-from Activations import ReLU, Sigmoid, Linear
+from Activations import ReLU, Sigmoid, Linear, Softmax
 
 class Layer(object):
     def __init__():
@@ -14,7 +14,8 @@ class Dense(Layer):
         self.activation = {
             'relu': ReLU(),
             'sigmoid': Sigmoid(),
-            'linear': Linear()
+            'linear': Linear(),
+            'softmax': Softmax()
         }[activation]
 
         # He initialization

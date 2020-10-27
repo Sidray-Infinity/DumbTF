@@ -42,9 +42,8 @@ class Sigmoid(object):
             else:
                 sig[i] = 1 / (1 + np.exp(-data[i]))
 
-  
-        sig = np.minimum(sig, 0.999999)  # Set upper bound
-        sig = np.maximum(sig, 0.000001)  # Set lower bound
+        sig = np.minimum(sig, 0.9999999)  # Set upper bound
+        sig = np.maximum(sig, 0.0000001)  # Set lower bound
         return sig
 
 
@@ -60,20 +59,30 @@ class Softmax(object):
     def __init__(self):
         super().__init__()
 
+    def softmax(self, data):
+        # For numerical stability
+        shift_data = data - np.max(data)
+
+        exps = np.exp(shift_data)
+        res = exps / np.sum(exps)
+        res = np.minimum(res, 0.9999999)  # Set upper bound
+        res = np.maximum(res, 0.0000001)  # Set lower bound
+        return res
+
     def __call__(self, data):
+        return self.softmax(data)
+        
+    def der(self, data):
         """
-        * data -> Layer output 1D array
-        * For numerical stability
+        ************* Testing required ***************
         """
         shift_data = data - np.max(data)
-        exps = np.exp(shift_data)
-        return exps/np.sum(exps)
 
+        totalSum = np.sum(np.exp(shift_data))
+        totalSumSqr = totalSum ** 2
+        res = np.zeros_like(data)
+        for i in range(data.shape[0]):
+            currExp = np.exp(shift_data[i])
+            res[i] = ((totalSum - currExp) * currExp) / totalSumSqr
 
-    def der(self):
-        pass
-
-
-if __name__ == "__main__":
-
-    pass
+        return res

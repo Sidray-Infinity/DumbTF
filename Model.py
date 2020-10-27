@@ -81,7 +81,7 @@ class Model(object):
 
 				losse += lossb
 
-				t.set_description(f"EPOCH: {epoch} LOSS: {lossb}".format(x_loss))
+				t.set_description(f"EPOCH: {epoch} LOSS: {np.round(lossb, 3)}".format(x_loss))
 				t.refresh()
 
 				# Update the weights & biases based on the calculated gradients

@@ -4,7 +4,6 @@ A deep learning library for dumb people.
 
 ## Focus
 ---
-- Implement Categorical cross entropy (with it's sparse version)
 - Implement convolution layers
 
 ## Installation
@@ -16,6 +15,7 @@ Doesn't work though. Have patience. Was just learning to make packages.
 ---
 * Works well for regression.
 * Implemented binary cross entropy - not satisfactory
+* CCE Works, but too slow 
 * It's so good to see the loss going down for boston housing regression. :)
 * Keras vs DumbTF on boston housing. (Orange is keras)
 
