@@ -26,3 +26,7 @@ Doesn't work though. Have patience. Was just learning to make packages.
 - http://neuralnetworksanddeeplearning.com/chap2.html
 - https://brilliant.org/wiki/backpropagation/#$
 - https://towardsdatascience.com/batch-mini-batch-stochastic-gradient-descent-7a62ecba642a
+
+### For Convolutions
+* https://www.sicara.ai/blog/2019-10-31-convolutional-layer-convolution-kernel
+* https://www.youtube.com/watch?v=8rrHTtUzyZA

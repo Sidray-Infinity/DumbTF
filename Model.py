@@ -13,7 +13,10 @@ class Model(object):
 		self.loss_func = None
 
 	def add(self, layer):
+		if len(self.layers) >= 1:
+			layer.prev_layer = self.layers[-1]
 		self.layers.append(layer)
+		
 
 	def compile(self, loss, optimizer, lr=0.01):
 		"""----------------------------------------------
@@ -51,7 +54,7 @@ class Model(object):
 
 				batch_loss = 0  # Thing to be minimized
 
-				self.optimizer.reset_gradients()
+				self.optimizer.reset_gradients(self.layers)
 
 				for (x_ele, y_ele) in zip(batch_x, batch_y):
 					x = x_ele.copy()
@@ -109,3 +112,7 @@ class Model(object):
 			ret += "Layer: " + str(i) + " Size: " + str(l.num_nodes) + "\n"
 		ret += "------------------------------------------------\n"
 		return ret
+
+	def __iter__(self):
+		for l in self.layers:
+			yield l

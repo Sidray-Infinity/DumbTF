@@ -14,6 +14,9 @@ class ReLU(object):
         data[data > 0] = 1
         return data
 
+    def __str__(self):
+        return 'ReLU '
+
 
 class Linear(object):
     def __init__(self):
@@ -24,6 +27,9 @@ class Linear(object):
 
     def der(self, data):
         return np.ones(data.shape, dtype='float32')
+    
+    def __str__(self):
+        return 'Linear '
 
 
 class Sigmoid(object):
@@ -45,8 +51,7 @@ class Sigmoid(object):
         sig = np.minimum(sig, 0.9999999)  # Set upper bound
         sig = np.maximum(sig, 0.0000001)  # Set lower bound
         return sig
-
-
+    
     def __call__(self, data):
         return self.sigmoid(data)
 
@@ -54,6 +59,8 @@ class Sigmoid(object):
     def der(self, data):
         return self.sigmoid(data) * (1.0 - self.sigmoid(data))
 
+    def __str__(self):
+        return 'Sigmoid '
 
 class Softmax(object):
     def __init__(self):
@@ -86,3 +93,6 @@ class Softmax(object):
             res[i] = ((totalSum - currExp) * currExp) / totalSumSqr
 
         return res
+
+    def __str__(self):
+        return 'Softmax '
