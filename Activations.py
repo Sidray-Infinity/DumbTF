@@ -80,9 +80,7 @@ class Softmax(object):
         return self.softmax(data)
         
     def der(self, data):
-        """
-        ************* Testing required ***************
-        """
+        # For numerical stability
         shift_data = data - np.max(data)
 
         totalSum = np.sum(np.exp(shift_data))

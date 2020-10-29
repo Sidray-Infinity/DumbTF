@@ -17,7 +17,7 @@ class MiniBatchGD(object):
 
     def step(self, layers, batch_size):
         for l in layers:
-            l.update_params(self.lr, batch_size)
+            l.backward(self.lr, batch_size)
 
 class SGD(object):
     def __init__(self):
