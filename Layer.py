@@ -69,14 +69,12 @@ class Dense(Layer):
 class Conv2D(Layer):
     """
     ********************** CHANNEL LAST ************************
-    - Technically cross-correlation, as kernels are not flipped.
     """
 
-    def __init__(self, filters, kernel_size, activation, input_shape, stride=(1, 1)):
+    def __init__(self, filters, kernel_size, activation, input_shape=None, stride=(1, 1)):
         super().__init__()
-        assert len(input_shape) == 3
-        assert input_shape[2] <= 3
-
+        
+        self.input_shape = input_shape
         self.filters = filters
         self.k = kernel_size
 
@@ -92,80 +90,134 @@ class Conv2D(Layer):
             'softmax': Softmax()
         }[activation]
         self.prev_layer = None
-
+        
         self.op_H = (input_shape[0] - self.k) // stride[0] + 1
         self.op_W = (input_shape[1] - self.k) // stride[1] + 1
         
         self.weighted_sum = np.zeros((self.op_H, self.op_W, filters))
 
-        # Parameters to learn
-        self.biases = np.zeros((self.op_H, self.op_W, filters))
-        self.kernels = np.random.randn(filters, self.k, self.k, self.depth)
+        # Parameters to learnnp
+        self.biases = np.zeros((self.op_H, self.op_W, self.filters))
+        self.kernels = np.random.randn(self.k, self.k, self.depth, self.filters)
 
         self.output = None
         
         # DS's to store the gradients while backprop
-        self.kernel_grads = np.zeros((filters, self.k, self.k, self.depth))
-        self.biases_grads = np.zeros((self.op_H, self.op_W, filters))
+        self.kernel_grads = np.zeros((self.k, self.k, self.depth, self.filters))
+        self.biases_grads = np.zeros((self.op_H, self.op_W, self.filters))
         
-    def compute_layer(self, input_data):
-        self.input = input_data
+    def convolve(self, input_data, kernel, stride=(1,1), mode="normal"):
+    
+        h_k = kernel.shape[0]
+        w_k = kernel.shape[1]
+        
+        h_i = input_data.shape[0]
+        w_i = input_data.shape[1]
+        
+        if mode == 'full':
+            h = (h_i + h_k) // stride[0] - 1
+            w = (w_i + w_k) // stride[1] - 1
+            pad_h = (max(h_i-h_k, 1),max(h_i-h_k, 1))
+            pad_w = (max(w_i-w_k, 1),max(w_i-w_k, 1))
+            ip = np.pad(input_data, (pad_h, pad_w, (0,0)))
+        else:
+            h = (h_i - h_k) // stride[0] + 1
+            w = (w_i - w_k) // stride[1] + 1
+            ip = input_data
+        
+        # op = np.empty((h,w))
+        print(kernel.shape)
+        expanded_input = np.lib.stride_tricks.as_strided(
+            input_data,
+            shape=(h,w,h_k,w_k,kernel.shape[2]),
+            strides=(
+                input_data.strides[0],
+                input_data.strides[1],
+                input_data.strides[0],  
+                input_data.strides[1],
+                input_data.strides[2]
+            ),
+            writeable=False)
 
+        op = np.einsum(
+                'HWhwd,hwd->HW',
+                expanded_input,
+                kernel)
+
+        # for i in range(0, h, stride[0]):
+        #     for j in range(0, w, stride[1]):
+        #         slice_ = ip[i:i+h_k, j:j+w_k]
+        #         op[i, j] = np.sum(slice_ * kernel)
+        
+        return op
+
+    def compute_layer(self, input_data):
         for f in range(self.filters):
-            self.weighted_sum[:, :, f] = self.convolve(input_data, self.kernels[f], self.stride)
+            self.weighted_sum[:, :, f] = self.convolve(input_data, 
+                                            np.flip(self.kernels[:, :, :, f], 0),
+                                            self.stride)
 
         self.weighted_sum += self.biases
         self.output = self.activation(self.weighted_sum)
         return self.output
 
     def reset_gradients(self):
-        self.kernel_grads = np.zeros((filters, self.k, self.k))
-        self.biases_grads = np.zeros((filters, self.op_H, self.op_W))
+        self.kernel_grads = np.zeros((self.k, self.k, self.depth, self.filters))
+        self.biases_grads = np.zeros((self.op_H, self.op_W, self.filters))
 
     def update_gradients(self, error):
-        """
-        Going to be insane
-        """
+ 
         if self.prev_layer == None:
             return
 
-    def convolve(self, input_data, kernel, stride=(1,1)):
-   
-        h_k = kernel.shape[0]
-        w_k = kernel.shape[1]
-        
-        h = (input_data.shape[0] - h_k) // stride[0] + 1
-        w = (input_data.shape[1] - w_k) // stride[1] + 1
-    
-        op = np.empty((h,w))
-        for i in range(0, h, stride[0]):
-            for j in range(0, w, stride[1]):
-                slice_ = input_data[i:i+h_k, j:j+w_k]
-                op[i, j] = np.sum(slice_ * kernel)
-        
-        return op
+        for f in range(self.filters):
+            for d in range(self.depth):
+                self.kernel_grads[:,:,d,f] += self.convolve(self.prev_layer.output[:,:,d],
+                                             np.flip(error[:,:,f], 0))
+
+        curr_error = np.empty(self.prev_layer.output.shape)
+        reshaped_kernels = self.kernels.reshape(self.k, self.k, self.filters, self.depth)
+
+        for d in range(self.depth):
+            curr_error[:,:,d] = self.convolve(error, np.flip(reshaped_kernels[:,:,:,d], 0), mode='full') 
+            
+        curr_error = curr_error * self.prev_layer.activation.der(
+                                    self.prev_layer.weighted_sum)
+
+        return curr_error
 
     def backward(self, lr, batch_size):
         self.kernel_grads /= batch_size
         self.biases_grads /= batch_size
 
-        self.kernel_grads -= lr * self.kernel_grads
+        self.kernels -= lr * self.kernel_grads
         self.biases -= lr * self.biases_grads
 
     def __call__(self, input_data):
         return self.compute_layer(input_data)
 
 class Flatten(Layer):
-    def __init__(self):
+    def __init__(self, input_shape=None):
         super().__init__()
+        self.input_shape = None
         self.prev_layer = None
         self.output = None
         self.weighted_sum = None
+        self.activation = Linear()
 
     def compute_layer(self, input_data):
         self.output = np.asarray(input_data).flatten()
         self.weighted_sum = self.output
         return self.output
+
+    def reset_gradients(self):
+        pass
+
+    def update_gradients(self, error):
+        return error.reshape(self.prev_layer.output.shape)
+    
+    def backward(self, lr, batch_size):
+        pass
 
 class MaxPool2D(Layer):
     def __init__(self, kernel_size):

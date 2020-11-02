@@ -37,10 +37,8 @@ class CategoricalCrossEntroy(object):
     def __init__(self, y_true=None, y_pred=None):
         super().__init__()
 
-    def cce(self, y_true, y_pred):
-        return -np.sum(y_true * np.log(y_pred))
-
     def der(self, y_true, y_pred):
+    
         res = np.zeros_like(y_true)
         for i in range(y_pred.shape[0]):
             res[i] = -y_true[i]/y_pred[i]
@@ -52,7 +50,7 @@ class CategoricalCrossEntroy(object):
         * Ensure that the target vector is one-hot encoded
         * Ensure that the final layer activation is softmax
         """
-        return self.cce(y_true, y_pred)
+        return -np.sum(y_true * np.log(y_pred))
 
 
 class MSE(object):
@@ -68,7 +66,3 @@ class MSE(object):
         # Accoring to https://brilliant.org/wiki/backpropagation/#$
         # Turns out, the 0.5 helps during back propagation
         return np.asarray(0.5 * ((y_true - y_pred) ** 2))
-
-
-if __name__ == "__main__":
-    pass
