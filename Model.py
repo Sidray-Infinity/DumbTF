@@ -53,7 +53,6 @@ class Model(object):
 				self.optimizer.reset_gradients(self.layers)
 
 				for count, (x_ele, y_ele) in enumerate(zip(batch_x, batch_y)):
-					print(count, end='\r', flush=True)
 					x = x_ele.copy()
 
 					# Forward pass the data
@@ -81,7 +80,8 @@ class Model(object):
 
 				losse += lossb
 
-				t.set_description(f"EPOCH: {epoch+1} LOSS: {np.round(lossb, 3)}".format(x_loss))
+				# t.set_description(f"EPOCH: {epoch+1} LOSS: {np.round(lossb, 3)}".format(x_loss))
+				t.set_description(f"EPOCH: {epoch+1} LOSS: {lossb}".format(x_loss))
 				t.refresh()
 
 				# Update the weights & biases based on the calculated gradients

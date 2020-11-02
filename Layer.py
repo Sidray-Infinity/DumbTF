@@ -107,7 +107,9 @@ class Conv2D(Layer):
         self.biases_grads = np.zeros((self.op_H, self.op_W, self.filters))
         
     def convolve(self, input_data, kernel, stride=(1,1), mode="normal"):
-    
+        
+        assert len(input_data.shape) == len(kernel.shape)
+
         h_k = kernel.shape[0]
         w_k = kernel.shape[1]
         
@@ -124,31 +126,38 @@ class Conv2D(Layer):
             h = (h_i - h_k) // stride[0] + 1
             w = (w_i - w_k) // stride[1] + 1
             ip = input_data
-        
-        # op = np.empty((h,w))
-        print(kernel.shape)
-        expanded_input = np.lib.stride_tricks.as_strided(
-            input_data,
-            shape=(h,w,h_k,w_k,kernel.shape[2]),
-            strides=(
+
+        if len(kernel.shape) == 2:
+            notation = "HWhw,hw->HW"
+            shape_ = (h,w,h_k,w_k)
+            strides_ = (
+                input_data.strides[0],
+                input_data.strides[1],
+                input_data.strides[0],  
+                input_data.strides[1]
+            )
+        elif len(kernel.shape) == 3:
+            notation = "HWhwd,hwd->HW"
+            shape_ = (h,w,h_k,w_k,kernel.shape[2])
+            strides_ = (
                 input_data.strides[0],
                 input_data.strides[1],
                 input_data.strides[0],  
                 input_data.strides[1],
                 input_data.strides[2]
-            ),
+            )
+
+        expanded_input = np.lib.stride_tricks.as_strided(
+            input_data,
+            shape=shape_,
+            strides=strides_,
             writeable=False)
 
         op = np.einsum(
-                'HWhwd,hwd->HW',
+                notation,
                 expanded_input,
                 kernel)
 
-        # for i in range(0, h, stride[0]):
-        #     for j in range(0, w, stride[1]):
-        #         slice_ = ip[i:i+h_k, j:j+w_k]
-        #         op[i, j] = np.sum(slice_ * kernel)
-        
         return op
 
     def compute_layer(self, input_data):
