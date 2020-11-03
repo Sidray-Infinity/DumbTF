@@ -29,7 +29,7 @@ Doesn't work though. Have patience. Was just learning to make packages.
      alt="Regression Graph"
      style="margin-right: 10px; height:400px; width: 800px;" />
 
-- ### Binary Classification (Boston Housing Dataset)
+- ### Binary Classification (Breast Cancer Dataset)
     Network Architecture
     ```python
     model = Model()
