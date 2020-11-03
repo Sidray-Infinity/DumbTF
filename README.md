@@ -71,7 +71,7 @@ Doesn't work though. Have patience. Was just learning to make packages.
     model.add(Conv2D(32, 3, 'relu', (28, 28, 1)))
     model.add(Conv2D(32, 3, 'relu', (26, 26, 32)))
     model.add(Flatten())
-    model.add(Dense(10, input_shape=25*26*32, activation='softmax'))
+    model.add(Dense(10, input_shape=26*26*32, activation='softmax'))
 
     model.compile(loss='cce', optimizer='mini_batch_gd')
 
