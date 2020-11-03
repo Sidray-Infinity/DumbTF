@@ -1,3 +1,7 @@
+<center><img src="images/logo.png"
+     alt="logo"
+     style="height: 200px; width: 200px;" /></center>
+
 # DumbTF
 ---
 A deep learning library for dumb people. 
