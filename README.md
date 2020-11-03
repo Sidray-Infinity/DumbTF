@@ -4,7 +4,7 @@ A deep learning library for dumb people.
 
 ## Focus
 ---
-- Implement convolution layers
+- Implement additional layers, to be used along with convolutions
 
 ## Installation
 `pip install Dumb-TF`
@@ -13,14 +13,69 @@ Doesn't work though. Have patience. Was just learning to make packages.
 
 ## Status 
 ---
-* Works well for regression.
-* Implemented binary cross entropy - not satisfactory
-* CCE Works, but too slow 
-* It's so good to see the loss going down for boston housing regression. :)
-* Keras vs DumbTF on boston housing. (Orange is keras)
+- ### Regression (Boston Housing Dataset)
+    Network Architecture
+    ```python
+    model = Model()
+    model.add(Dense(128, input_shape=13, activation='relu'))
+    model.add(Dense(64, input_shape=128, activation='relu'))
+    model.add(Dense(1, input_shape=64, activation='linear'))
 
-<img src="images/boston_housing.png"></img>
+    model.compile(loss="mse", optimizer="mini_batch_gd", lr=0.01)
 
+    loss, loss_pe = model.fit(x_train, y_train, epochs=20, batch_size=64)
+    ```
+    <img src="images/regression.png"
+     alt="Regression Graph"
+     style="margin-right: 10px; height:400px; width: 800px;" />
+
+- ### Binary Classification (Boston Housing Dataset)
+    Network Architecture
+    ```python
+    model = Model()
+    model.add(Dense(64, input_shape=30, activation='relu'))
+    model.add(Dense(32, input_shape=64, activation='relu'))
+    model.add(Dense(1, input_shape=32, activation='sigmoid'))
+
+    model.compile(loss="bce", optimizer="mini_batch_gd", lr=0.01)
+
+    loss, loss_pe = model.fit(x, y, epochs=150, batch_size=64)
+    ```
+    <img src="images/bce.png"
+     alt="BCE Graph"
+     style="margin-right: 10px; height:400px; width: 800px;" />
+
+- ### Multiclass Classification (MNIST)
+    Network Architecture
+    ```python
+    model = Model()
+    model.add(Dense(32, input_shape=784, activation='relu'))
+    model.add(Dense(10, input_shape=32, activation='softmax'))
+
+    model.compile(loss="cce", optimizer="mini_batch_gd", lr=0.01)
+
+    loss, loss_pe = model.fit(x_train, y_train, epochs=10, batch_size=64)
+    ```
+    <img src="images/cce.png"
+     alt="BCE Graph"
+     style="margin-right: 10px; height:400px; width: 800px;" />
+
+- ### Convolution Network (MNIST)
+    Network Architecture
+    ```python
+    model = Model()
+    model.add(Conv2D(32, 3, 'relu', (28, 28, 1)))
+    model.add(Conv2D(32, 3, 'relu', (26, 26, 32)))
+    model.add(Flatten())
+    model.add(Dense(10, input_shape=25*26*32, activation='softmax'))
+
+    model.compile(loss='cce', optimizer='mini_batch_gd')
+
+    loss, loss_pe = model.fit(x_train, y_train, epochs=10, batch_size=64)
+    ```
+    <img src="images/conv.png"
+     alt="BCE Graph"
+     style="margin-right: 10px; height:400px; width: 800px;" />
 
 ## References
 - http://neuralnetworksanddeeplearning.com/chap2.html

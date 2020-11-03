@@ -96,7 +96,7 @@ class Conv2D(Layer):
         
         self.weighted_sum = np.zeros((self.op_H, self.op_W, filters))
 
-        # Parameters to learnnp
+        # Parameters to learn
         self.biases = np.zeros((self.op_H, self.op_W, self.filters))
         self.kernels = np.random.randn(self.k, self.k, self.depth, self.filters)
 
@@ -131,24 +131,24 @@ class Conv2D(Layer):
             notation = "HWhw,hw->HW"
             shape_ = (h,w,h_k,w_k)
             strides_ = (
-                input_data.strides[0],
-                input_data.strides[1],
-                input_data.strides[0],  
-                input_data.strides[1]
+                ip.strides[0],
+                ip.strides[1],
+                ip.strides[0],  
+                ip.strides[1]
             )
         elif len(kernel.shape) == 3:
             notation = "HWhwd,hwd->HW"
             shape_ = (h,w,h_k,w_k,kernel.shape[2])
             strides_ = (
-                input_data.strides[0],
-                input_data.strides[1],
-                input_data.strides[0],  
-                input_data.strides[1],
-                input_data.strides[2]
+                ip.strides[0],
+                ip.strides[1],
+                ip.strides[0],  
+                ip.strides[1],
+                ip.strides[2]
             )
 
         expanded_input = np.lib.stride_tricks.as_strided(
-            input_data,
+            ip,
             shape=shape_,
             strides=strides_,
             writeable=False)
@@ -163,7 +163,7 @@ class Conv2D(Layer):
     def compute_layer(self, input_data):
         for f in range(self.filters):
             self.weighted_sum[:, :, f] = self.convolve(input_data, 
-                                            np.flip(self.kernels[:, :, :, f], 0),
+                                            self.kernels[:, :, :, f],
                                             self.stride)
 
         self.weighted_sum += self.biases
@@ -182,13 +182,13 @@ class Conv2D(Layer):
         for f in range(self.filters):
             for d in range(self.depth):
                 self.kernel_grads[:,:,d,f] += self.convolve(self.prev_layer.output[:,:,d],
-                                             np.flip(error[:,:,f], 0))
+                                             error[:,:,f])
 
         curr_error = np.empty(self.prev_layer.output.shape)
         reshaped_kernels = self.kernels.reshape(self.k, self.k, self.filters, self.depth)
 
         for d in range(self.depth):
-            curr_error[:,:,d] = self.convolve(error, np.flip(reshaped_kernels[:,:,:,d], 0), mode='full') 
+            curr_error[:,:,d] = self.convolve(error, reshaped_kernels[:,:,:,d], mode='full') 
             
         curr_error = curr_error * self.prev_layer.activation.der(
                                     self.prev_layer.weighted_sum)

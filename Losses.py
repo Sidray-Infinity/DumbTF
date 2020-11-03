@@ -40,9 +40,13 @@ class CategoricalCrossEntroy(object):
     def der(self, y_true, y_pred):
     
         res = np.zeros_like(y_true)
-        for i in range(y_pred.shape[0]):
-            res[i] = -y_true[i]/y_pred[i]
-
+        sum_ = np.sum(y_pred)
+        true_index = np.argmax(y_true)
+        for i in range(y_true.shape[0]):
+            if i == true_index:
+                res[i] = y_pred[i]-1
+            else:
+                res[i] = y_pred[i]
         return res
 
     def __call__(self, y_true, y_pred):
@@ -50,7 +54,7 @@ class CategoricalCrossEntroy(object):
         * Ensure that the target vector is one-hot encoded
         * Ensure that the final layer activation is softmax
         """
-        return -np.sum(y_true * np.log(y_pred))
+        return -np.log(y_pred[np.argmax(y_true)])
 
 
 class MSE(object):

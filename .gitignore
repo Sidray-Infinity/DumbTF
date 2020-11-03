@@ -131,3 +131,5 @@ dmypy.json
 
 thoughts.md
 *.ipynb
+dumb_tf/node_modules/
+.gitignore

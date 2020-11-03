@@ -37,6 +37,7 @@ class Model(object):
 		assert len(X) == len(Y)
 		num_batches = int(np.ceil(len(X)/batch_size))
 		losses = []
+		losses_pe = []
 		for epoch in range(epochs):
 			losse = 0
 			t = trange(num_batches)
@@ -69,27 +70,21 @@ class Model(object):
 
 					self.optimizer.update_gradients(self.layers, x_err)
 
-					# ---------- FOR STOCHASTIC GRADIENT DESCENT -------------
-					# self.optimizer.step(self.layers, 1)
-					# --------------------------------------------------------
-
-
 				batch_loss /= batch_size
 				lossb = batch_loss.mean()
 				losses.append(lossb)
 
 				losse += lossb
 
-				# t.set_description(f"EPOCH: {epoch+1} LOSS: {np.round(lossb, 3)}".format(x_loss))
-				t.set_description(f"EPOCH: {epoch+1} LOSS: {lossb}".format(x_loss))
+				t.set_description(f"EPOCH: {epoch+1} LOSS: {np.round(lossb, 3)}".format(x_loss))
 				t.refresh()
 
 				# Update the weights & biases based on the calculated gradients
 				self.optimizer.step(self.layers, len(batch_x))
 
 			losse /= num_batches
-			
-		return np.asarray(losses)
+			losses_pe.append(losse)
+		return np.asarray(losses), np.asarray(losses_pe)
 
 	def predict(self, test_x):
 		result = []
