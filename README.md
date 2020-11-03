@@ -1,6 +1,6 @@
-<center><img src="images/logo.png"
+<p align=center><img src="images/logo.png"
      alt="logo"
-     style="height: 200px; width: 200px;" /></center>
+     style="height: 180px; width: 200px;" /></p>
 
 # DumbTF
 ---
