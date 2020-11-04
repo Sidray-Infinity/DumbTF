@@ -85,8 +85,8 @@ class Softmax(object):
 
         totalSum = np.sum(np.exp(shift_data))
         totalSumSqr = totalSum ** 2
-        res = np.zeros_like(data)
-        for i in range(data.shape[0]):
+        res = np.zeros_like(shift_data)
+        for i in range(shift_data.shape[0]):
             currExp = np.exp(shift_data[i])
             res[i] = ((totalSum - currExp) * currExp) / totalSumSqr
 

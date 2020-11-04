@@ -131,6 +131,5 @@ dmypy.json
 
 thoughts.md
 *.ipynb
-
-#Playground dependencies
-/dumb_tf/node_modules
+dumb_tf/node_modules/
+.gitignore
