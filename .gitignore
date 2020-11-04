@@ -131,3 +131,6 @@ dmypy.json
 
 thoughts.md
 *.ipynb
+
+#Playground dependencies
+/dumb_tf/mode_modules
