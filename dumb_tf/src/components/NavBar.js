@@ -47,8 +47,8 @@ function NavBar() {
 
           <Typography variant="h6" style={{ flex: 1 }}>
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={logo} width="100px"
-              height="80px"
+              <img src={logo} width="80px"
+              height="60px"
               style={{marginTop:"10px"}}
               />
             </Link>
