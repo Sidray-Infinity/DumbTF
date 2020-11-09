@@ -66,6 +66,9 @@ class Dense(Layer):
         return f"NUM NODES: {self.num_nodes} ACTIVATON: {self.activation}" +\
             f"INPUT SHAPE: {self.input_shape}"
 
+    def __call__(self, x):
+        return self.compute_layer(x)
+
 class Conv2D(Layer):
     """
     ********************** CHANNEL LAST ************************
