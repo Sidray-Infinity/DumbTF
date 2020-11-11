@@ -9,6 +9,7 @@ A deep learning library for dumb people.
 ## Focus
 ---
 - Implement additional layers, to be used along with convolutions
+- Convolutions are still slow, despite using the numpy stride trick and einsum.
 
 ## Installation
 `pip install Dumb-TF`
@@ -100,3 +101,6 @@ Doesn't work though. Have patience. Was just learning to make packages.
 (Backpropagation in convolutions)
 * https://medium.com/@pavisj/convolutions-and-backpropagations-46026a8f5d2c
 * https://www.jefkine.com/general/2016/09/05/backpropagation-in-convolutional-neural-networks/
+
+(MaxPool2D)
+* https://wiseodd.github.io/techblog/2016/07/18/convnet-maxpool-layer/#:~:text=Maxpool%20backward&text=We%20let%20the%20gradient%20pass,max%20operation%20do%20in%20backpropagation.
