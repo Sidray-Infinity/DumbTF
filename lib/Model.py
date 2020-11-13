@@ -1,8 +1,8 @@
-from Layer import Dense, Layer
+from .Layer import Dense, Layer
 import numpy as np
 from copy import copy
-from Losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
-from Optimizer import SGD, MiniBatchGD
+from .Losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
+from .Optimizer import SGD, MiniBatchGD
 from tqdm import trange, tqdm
 
 class Model(object):
