@@ -8,6 +8,7 @@ import {
   TextField,
   MenuItem,
 } from "@material-ui/core";
+import Network from "../playground-src/neuralNode";
 
 const lr = [
   {
@@ -50,6 +51,13 @@ export default class Playground extends Component {
     super();
     this.state = {
       learningRate: lr[0].label,
+      numNodes: 1,
+      nodes: [],
+      nodesBegin: [],
+      nodesEnd: [],
+      nodesDist: [],
+      paths: [],
+      filtered: [],
     };
   }
 
@@ -119,7 +127,6 @@ export default class Playground extends Component {
             <Typography
               style={{ fontSize: "0.8rem" }}
               variant="subtitle1"
-
               color="textSecondary"
             >
               Activation
@@ -140,7 +147,6 @@ export default class Playground extends Component {
             <Typography
               style={{ fontSize: "0.8rem" }}
               variant="subtitle1"
-
               color="textSecondary"
             >
               Regularization
@@ -161,7 +167,6 @@ export default class Playground extends Component {
             <Typography
               style={{ fontSize: "0.8rem" }}
               variant="subtitle1"
-
               color="textSecondary"
             >
               Regularization rate
@@ -182,7 +187,6 @@ export default class Playground extends Component {
             <Typography
               style={{ fontSize: "0.8rem" }}
               variant="subtitle1"
-
               color="textSecondary"
             >
               Problem type
@@ -200,6 +204,19 @@ export default class Playground extends Component {
             </TextField>
           </Grid>
         </Grid>
+        <div style={{ textAlign: "center", marginTop: "2px" }}>
+          <IconButton size="small">
+            <Icon style={{ color: "#546e7a", fontSize: 25 }}>
+              add_circle_icon
+            </Icon>
+          </IconButton>
+          <IconButton size="small">
+            <Icon style={{ color: "#546e7a", fontSize: 25 }}>
+              remove_circle_icon
+            </Icon>
+          </IconButton>
+          <Network />
+        </div>
       </div>
     );
   }
