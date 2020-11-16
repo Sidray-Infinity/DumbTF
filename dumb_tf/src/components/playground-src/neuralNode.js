@@ -1,33 +1,41 @@
 import Sketch from "react-p5";
 import React, { Component } from "react";
+var nodesCopy = [];
 
 export default class Network extends Component {
   constructor() {
     super();
     this.state = {
-      numNodes: 4,
-      nodes: [],
-      nodesBegin: [],
-      nodesEnd: [],
-      nodesDist: [],
       paths: [],
       filtered: [],
+      nodes: [],
     };
   }
 
-  // TODO: Implement add-delete neurons functionality in buttons
-
-  //   alterNumNodes(more) {
-  //     if (!more && this.state.numNodes - 1 === 0) return;
-  //     if (this.state.numNodes > 0) {
-  //       more
-  //         ? this.setState((state) => ({ numNodes: state.numNodes + 1 }))
-  //         : this.setState((state) => ({ numNodes: state.numNodes - 1 }));
-  //     }
-  //   }
+  componentDidUpdate() {
+    var {
+      numNodes,
+      nodes,
+      nodesBegin,
+      nodesEnd,
+      nodesDist,
+    } = this.props.params;
+    nodesCopy = [];
+    for (let i = 0; i < numNodes; i++)
+      nodesCopy.push(
+        new Node(
+          window.p5Global,
+          numNodes,
+          nodes,
+          nodesBegin,
+          nodesEnd,
+          nodesDist
+        )
+      );
+  }
 
   render() {
-    const { numNodes, nodes, nodesBegin, nodesEnd, nodesDist } = this.state;
+    console.log(this.props.params.numNodes);
     return (
       <div>
         <Sketch
@@ -35,17 +43,14 @@ export default class Network extends Component {
             p5.createCanvas(600, 400).parent(parentRef);
             p5.frameRate(20);
             p5.noStroke();
-            for (let i = 0; i < this.state.numNodes; i++)
-              this.state.nodes.push(
-                new Node(p5, numNodes, nodes, nodesBegin, nodesEnd, nodesDist)
-              );
+            window.p5Global = p5;
           }}
           draw={(p5) => {
             p5.fill(0, 10);
             p5.rect(0, 0, p5.width, p5.height);
-            this.state.nodes.forEach((node, idx) => {
+            nodesCopy.forEach((node, idx) => {
               node.draw(p5);
-              node.distBetweenNode(p5, nodes.slice(idx), idx);
+              node.distBetweenNode(p5, nodesCopy.slice(idx), idx);
             });
           }}
         />

@@ -51,7 +51,7 @@ export default class Playground extends Component {
     super();
     this.state = {
       learningRate: lr[0].label,
-      numNodes: 1,
+      numNodes: 0,
       nodes: [],
       nodesBegin: [],
       nodesEnd: [],
@@ -64,6 +64,16 @@ export default class Playground extends Component {
   handleChange(e) {
     this.setState({
       learningRate: e.target.value,
+    });
+  }
+
+  updateNode(e) {
+    if (this.state.numNodes === 0 && e.target.id !== "add_node") return;
+    this.setState({
+      numNodes:
+        e.target.id === "add_node"
+          ? this.state.numNodes + 1
+          : this.state.numNodes - 1,
     });
   }
 
@@ -205,17 +215,17 @@ export default class Playground extends Component {
           </Grid>
         </Grid>
         <div style={{ textAlign: "center", marginTop: "2px" }}>
-          <IconButton size="small">
-            <Icon style={{ color: "#546e7a", fontSize: 25 }}>
+          <IconButton size="small" onClick={(e) => this.updateNode(e)}>
+            <Icon style={{ color: "#546e7a", fontSize: 25 }} id="add_node">
               add_circle_icon
             </Icon>
           </IconButton>
-          <IconButton size="small">
-            <Icon style={{ color: "#546e7a", fontSize: 25 }}>
+          <IconButton size="small" onClick={(e) => this.updateNode(e)}>
+            <Icon style={{ color: "#546e7a", fontSize: 25 }} id="remove_node">
               remove_circle_icon
             </Icon>
           </IconButton>
-          <Network />
+          <Network params={this.state} />
         </div>
       </div>
     );
