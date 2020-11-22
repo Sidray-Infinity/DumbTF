@@ -19,18 +19,18 @@ class Dense(Layer):
         }[activation]
 
         # ************* He initialization ***************
-        self.weights = np.random.randn(self.num_nodes, input_shape) * np.sqrt(2/input_shape)
-        self.biases = np.zeros(shape=self.num_nodes)
-        self.weighted_sum = np.empty(shape=self.num_nodes, dtype=float)
+        self.weights = np.random.randn(self.num_nodes, input_shape).astype(np.float32) * np.sqrt(2/input_shape)
+        self.biases = np.zeros(shape=self.num_nodes,).astype(np.float32)
+        self.weighted_sum = np.empty(shape=self.num_nodes).astype(np.float32)
         self.output = []
 
         # DS's to hold the gradients while backprop
-        self.weight_grads = np.zeros((self.num_nodes, self.input_shape))
-        self.biases_grads = np.zeros(self.num_nodes)
+        self.weight_grads = np.zeros((self.num_nodes, self.input_shape)).astype(np.float32)
+        self.biases_grads = np.zeros(self.num_nodes).astype(np.float32)
 
     def reset_gradients(self):
-        self.weight_grads = np.zeros((self.num_nodes, self.input_shape))
-        self.biases_grads = np.zeros(shape=self.num_nodes)
+        self.weight_grads = np.zeros((self.num_nodes, self.input_shape)).astype(np.float32)
+        self.biases_grads = np.zeros(shape=self.num_nodes).astype(np.float32)
 
     def update_gradients(self, error):
         if self.prev_layer is None:
@@ -70,9 +70,7 @@ class Dense(Layer):
         return self.compute_layer(x)
 
 class Conv2D(Layer):
-    """
-    ********************** CHANNEL LAST ************************
-    """
+    # ********************** CHANNEL LAST ************************
 
     def __init__(self, filters, kernel_size, activation, input_shape=None, stride=(1, 1)):
         super().__init__()
@@ -101,8 +99,6 @@ class Conv2D(Layer):
 
         # Parameters to learn
         self.biases = np.zeros((self.op_H, self.op_W, self.filters))
-        self.kernels = np.random.randn(self.k, self.k, self.depth, self.filters)
-
         self.output = None
         
         # DS's to store the gradients while backprop

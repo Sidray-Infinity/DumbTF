@@ -69,11 +69,10 @@ class Softmax(object):
     def softmax(self, data):
         # For numerical stability
         shift_data = data - np.max(data)
-
         exps = np.exp(shift_data)
         res = exps / np.sum(exps)
-        res = np.minimum(res, 0.9999999)  # Set upper bound
-        res = np.maximum(res, 0.0000001)  # Set lower bound
+        res = np.minimum(res, 0.9999999999)  # Set upper bound
+        res = np.maximum(res, 0.0000000001)  # Set lower bound
         return res
 
     def __call__(self, data):
@@ -82,7 +81,6 @@ class Softmax(object):
     def der(self, data):
         # For numerical stability
         shift_data = data - np.max(data)
-
         totalSum = np.sum(np.exp(shift_data))
         totalSumSqr = totalSum ** 2
         res = np.zeros_like(shift_data)
