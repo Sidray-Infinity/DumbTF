@@ -48,8 +48,8 @@ class Sigmoid(object):
             else:
                 sig[i] = 1 / (1 + np.exp(-data[i]))
 
-        sig = np.minimum(sig, 0.9999999)  # Set upper bound
-        sig = np.maximum(sig, 0.0000001)  # Set lower bound
+        sig = np.minimum(sig, 0.9999999999999)  # Set upper bound
+        sig = np.maximum(sig, 0.0000000000001)  # Set lower bound
         return sig
     
     def __call__(self, data):
@@ -63,20 +63,17 @@ class Sigmoid(object):
         return 'Sigmoid '
 
 class Softmax(object):
-    def __init__(self):
+    def __init__(self,):
         super().__init__()
 
-    def softmax(self, data):
-        # For numerical stability
-        shift_data = data - np.max(data)
+    def __call__(self, data):
+        shift_data = data - np.max(data) # For numerical stability
+
         exps = np.exp(shift_data)
         res = exps / np.sum(exps)
-        res = np.minimum(res, 0.9999999999)  # Set upper bound
-        res = np.maximum(res, 0.0000000001)  # Set lower bound
+        res = np.minimum(res, 0.9999999999999)  # Set upper bound
+        res = np.maximum(res, 0.0000000000001)  # Set lower bound
         return res
-
-    def __call__(self, data):
-        return self.softmax(data)
         
     def der(self, data):
         # For numerical stability
