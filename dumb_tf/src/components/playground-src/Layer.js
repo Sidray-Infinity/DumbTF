@@ -37,7 +37,7 @@ export default class Layer extends Component {
   render() {
     var allNodes = [];
     for (let i = 0; i < this.state.nodesCount; i++)
-      allNodes.push(<Node name={this.state.nodes[i]}></Node>);
+      allNodes.push(<Node name={this.props.name + "_" + this.state.nodes[i]}></Node>);
 
     return (
       <div>
