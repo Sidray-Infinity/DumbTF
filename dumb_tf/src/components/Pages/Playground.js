@@ -9,7 +9,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 import { lr, act, probType } from "../playground-src/dropDownData";
-import Layer from "../playground-src/Layer";
+import Network from "../playground-src/Network";
 
 export default class Playground extends Component {
   constructor() {
@@ -18,9 +18,26 @@ export default class Playground extends Component {
       learningRate: lr[0].label,
       activation: act[0].label,
       problemType: probType[0].label,
-      hidLayers: [],
-      hidLayerCount: 0,
+      networkRef: React.createRef(),
     };
+  }
+
+  renderLines() {
+    var lines = [];
+    // for (let i = 1; i < this.state.layerRefs.length; i++) {
+    //   var currNodes = this.state.layerRefs[i].current.state.nodeRefs;
+    //   var prevNodes = this.state.layerRefs[i - 1].current.state.nodeRefs;
+
+    //   for (let j = 0; j < currNodes.length; j++) {
+    //     var { x1, y1 } = currNodes[j].current.state;
+    //     for (let k = 0; j < prevNodes.length; k++) {
+    //       var { x2, y2 } = prevNodes[k].current.state;
+    //       lines.append(<line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" />);
+    //     }
+    //   }
+    // }
+
+    return lines;
   }
 
   handleChange(e, field) {
@@ -29,35 +46,7 @@ export default class Playground extends Component {
     this.setState(stateObject);
   }
 
-  addLayer() {
-    var stateObject = {};
-    stateObject["hidLayerCount"] = Math.min(6, this.state.hidLayerCount + 1);
-
-    if (stateObject["hidLayerCount"] < 6) {
-      var hidLayers = this.state.hidLayers;
-      var newLayerName = "hidden_layer_" + stateObject["hidLayerCount"];
-      hidLayers.push(newLayerName);
-      stateObject["hidLayers"] = hidLayers;
-      this.setState(stateObject);
-    }
-  }
-
-  removeLayer() {
-    var stateObject = {};
-    stateObject["hidLayerCount"] = Math.max(0, this.state.hidLayerCount - 1);
-    if (stateObject["hidLayerCount"] >= 0) {
-      var hidLayers = this.state.hidLayers;
-      hidLayers.pop();
-      stateObject["hidLayers"] = hidLayers;
-      this.setState(stateObject);
-    }
-  }
-
   render() {
-    var hiddenLayers = [];
-    for (let i = 0; i < this.state.hidLayers.length; i++)
-      hiddenLayers.push(<Layer name={this.state.hidLayers[i]}></Layer>);
-
     return (
       <div>
         <Grid container alignItems="center" spacing={2}>
@@ -186,60 +175,10 @@ export default class Playground extends Component {
               </TextField>
             </Grid>
           </Grid>
-
-          {/* DEFINING LAYERS */}
-
-          <Grid
-            container
-            style={{
-              backgroundColor: "#ee3eee",
-              height: "6vh",
-              width: "100vw",
-            }}
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs>
-              <IconButton onClick={() => this.addLayer()}>
-                <Icon
-                  style={{
-                    color: "#546e7a",
-                  }}
-                >
-                  add_circle
-                </Icon>
-              </IconButton>
-            </Grid>
-            <Grid item xs>
-              <IconButton onClick={() => this.removeLayer()}>
-                <Icon
-                  style={{
-                    color: "#546e7a",
-                  }}
-                >
-                  remove_circle
-                </Icon>
-              </IconButton>
-            </Grid>
-            <Grid item xs>
-              <Typography>{this.state.hidLayerCount} Hidden Layers</Typography>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            style={{
-              height: "35vw",
-              width: "100vw",
-              backgroundColor: "#4d164d",
-            }}
-            
-            justify="center"
-            alignItems="center"
-          >
-            <Layer name="input_layer"></Layer>
-            {hiddenLayers}
-            <Layer name="output_layer"></Layer>
-          </Grid>
+          
+          {/* DEFINING NETWORK */}
+          <Network ref={this.state.networkRef}></Network>
+          {console.log(this.state.networkRef)}
         </Grid>
       </div>
     );
