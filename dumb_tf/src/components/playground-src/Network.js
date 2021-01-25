@@ -9,7 +9,7 @@ export default class Network extends Component {
     var outputLayerRef = React.createRef();
 
     this.state = {
-      inputLayer: [this.addLayerComp("inputLayer", inputLayerRef)],
+      inputLayer: [this.addLayerComp("inputLayer", inputLayerRef)], // so this is a list of layer components
       outputLayer: [this.addLayerComp("outputLayer", outputLayerRef)],
       inputLayerRef: inputLayerRef,
       outputLayerRef: outputLayerRef,
@@ -20,6 +20,8 @@ export default class Network extends Component {
 
       edges: [],
       edgesRendered: false,
+
+      nodeStates:[]
     };
   }
 
@@ -50,22 +52,31 @@ export default class Network extends Component {
       // No  hidden layers; just connect input and output layers
       var ipNodeRefs = this.state.inputLayerRef.current.state.nodeRefs;
       var opNodeRefs = this.state.outputLayerRef.current.state.nodeRefs;
+      const nodeStates = [];
 
-      // STUPID JS BUG AHEAD
-      // STATE VALUE CHANGES ON ACCESSING THEM
-      // SCHRODINGER MUST BE HAPPY
+      // calculate position of node by name for input layer
+      for(let i=0; i<ipNodeRefs.length; i++)
+        nodeStates.push( this.calculateNodePositionByName(ipNodeRefs[i].current.props.name))
+      for(let j=0; j<opNodeRefs.length; j++)
+        nodeStates.push( this.calculateNodePositionByName(opNodeRefs[j].current.props.name))
 
-      for(let i=0; i<ipNodeRefs.length; i++) {
-        console.log(ipNodeRefs[i].current);
-        console.log(ipNodeRefs[i].current.state);
-        for(let j=0; j<opNodeRefs.length; j++) {
-          
-        }
-      }
-
-      console.log(edges);
-      this.setState({ edges: edges });
+      this.setState({ edges: edges, nodeStates:nodeStates });
     }
+  }
+
+  calculateNodePositionByName(name){
+    const { x, y } = document
+    .getElementById(name)
+    .getBoundingClientRect();
+
+
+    const nodeStateObject = {
+      x,
+      y,
+      name
+    }
+    console.log(nodeStateObject)
+    return nodeStateObject
   }
 
   renderLines() {
@@ -131,6 +142,8 @@ export default class Network extends Component {
   }
 
   render() {
+
+    console.log(this.state.nodeStates)
     return (
       <div>
         <Grid
@@ -182,18 +195,19 @@ export default class Network extends Component {
           alignItems="center"
         >
           {this.state.inputLayer}
+          {/* { Why not create a layer component?} */}
           {this.state.hidLayers.map((layer, index) => (
             <React.Fragment key={index}>{layer}</React.Fragment>
           ))}
           {this.state.outputLayer}
-          {/* {console.log(this.state.edges)}
+          {console.log(this.state.edges)}
           <svg>
             {this.state.edges.map((edge, index) => {
               return edge;
             })}
             <line x1="0" y1="0" x2="1000" y2="2000" stroke="black"></line>
-          </svg> */}
-          
+          </svg>
+
         </Grid>
       </div>
     );

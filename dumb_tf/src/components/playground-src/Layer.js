@@ -8,9 +8,10 @@ export default class Layer extends Component {
     nodesCount: 2,
     nodes: ["node:1", "node:2"],
     nodeRefs: [React.createRef(), React.createRef()],
+    nodeState: []
   };
 
-  addNode() {
+  addNode() { // should we store node component here?
     var stateObject = {};
     stateObject["nodesCount"] = Math.min(10, this.state.nodesCount + 1);
     if (stateObject["nodesCount"] < 10) {
@@ -70,7 +71,7 @@ export default class Layer extends Component {
           <Grid
             justify="center"
             container
-            style={{ //backgroundColor: "#ffc8ea", 
+            style={{ //backgroundColor: "#ffc8ea",
             height: "5vh", width: "10vw" }}
           >
             <Grid item>
@@ -97,7 +98,7 @@ export default class Layer extends Component {
             </Grid>
           </Grid>
 
-          <Grid item style={{ //backgroundColor: "#f46e7f" 
+          <Grid item style={{ //backgroundColor: "#f46e7f"
           }}>
             {allNodes}
           </Grid>
