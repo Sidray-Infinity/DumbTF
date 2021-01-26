@@ -3,211 +3,185 @@ import { Grid, IconButton, Icon, Typography } from "@material-ui/core";
 import Layer from "../playground-src/Layer";
 
 export default class Network extends Component {
-  constructor() {
-    super();
-    var inputLayerRef = React.createRef();
-    var outputLayerRef = React.createRef();
 
-    this.state = {
-      inputLayer: [this.addLayerComp("inputLayer", inputLayerRef)], // so this is a list of layer components
-      outputLayer: [this.addLayerComp("outputLayer", outputLayerRef)],
-      inputLayerRef: inputLayerRef,
-      outputLayerRef: outputLayerRef,
+  // constructor() {
+  //   super();
+  //   var inputLayerRef = React.createRef();
+  //   var outputLayerRef = React.createRef();
 
-      hidLayers: [],
-      hidLayersCount: 0,
-      hidLayersRefs: [],
+  //   this.state = {
+  //     inputLayer: [this.addLayerComp("inputLayer", inputLayerRef)], // so this is a list of layer components
+  //     outputLayer: [this.addLayerComp("outputLayer", outputLayerRef)],
+  //     inputLayerRef: inputLayerRef,
+  //     outputLayerRef: outputLayerRef,
 
-      edges: [],
-      edgesRendered: false,
+  //     hidLayers: [],
+  //     hidLayersCount: 0,
+  //     hidLayersRefs: [],
 
-      nodeStates: [],
-    };
-  }
+  //     edges: [],
+  //     edgesRendered: false,
 
-  addLineComp(x1, x2, y1, y2) {
-    return <line x1={x1} y1={y1} x2={x2} y2={x2} stroke="black"></line>;
-  }
+  //     nodeStates:[]
+  //   };
+  // }
 
-  computeEdges() {
-    // Layers have been mounted, compute the edges
+  // addLineComp(x1, x2, y1, y2) {
+  //   return <line x1={x1} y1={y1} x2={x2} y2={x2} stroke="black"></line>;
+  // }
 
-    var edges = [];
+  // computeEdges() {
+  //   // Layers have been mounted, compute the edges
 
-    if (this.state.hidLayers.length > 0) {
-      this.state.hidLayers.map((layer, index) => {
-        if (index === 0) {
-          // Make lines with input layer
+  //   var edges = [];
 
-          console.log(this.state.inputLayerRef.current);
-        }
+  //   if (this.state.hidLayers.length > 0) {
+  //     this.state.hidLayers.map((layer, index) => {
+  //       if (index === 0) {
+  //         // Make lines with input layer
 
-        if (index === this.state.hidLayers.length - 1) {
-          // Make lines with output layer
-        } else {
-          // Inter hidden layer connections
-        }
-      });
-    } else {
-      // No  hidden layers; just connect input and output layers
-      var ipNodeRefs = this.state.inputLayerRef.current.state.nodeRefs;
-      var opNodeRefs = this.state.outputLayerRef.current.state.nodeRefs;
-      const nodeStates = [];
+  //         console.log(this.state.inputLayerRef.current);
+  //       }
 
-      // calculate position of node by name for input layer
-      for (let i = 0; i < ipNodeRefs.length; i++)
-        nodeStates.push(
-          this.calculateNodePositionByName(ipNodeRefs[i].current.props.name)
-        );
-      for (let j = 0; j < opNodeRefs.length; j++)
-        nodeStates.push(
-          this.calculateNodePositionByName(opNodeRefs[j].current.props.name)
-        );
+  //       if (index === this.state.hidLayers.length - 1) {
+  //         // Make lines with output
+  //       } else {
+  //         // Inter hidden layer connections
+  //       }
+  //     });
+  //   } else {
+  //     // No  hidden layers; just connect input and output layers
+  //     var ipNodeRefs = this.state.inputLayerRef.current.state.nodeRefs;
+  //     var opNodeRefs = this.state.outputLayerRef.current.state.nodeRefs;
+  //     const nodeStates = [];
 
-      this.setState({ edges: edges, nodeStates: nodeStates });
-    }
-  }
+  //     // calculate position of node by name for input layer
+  //     for(let i=0; i<ipNodeRefs.length; i++)
+  //       nodeStates.push( this.calculateNodePositionByName(ipNodeRefs[i].current.props.name))
+  //     for(let j=0; j<opNodeRefs.length; j++)
+  //       nodeStates.push( this.calculateNodePositionByName(opNodeRefs[j].current.props.name))
 
-  calculateNodePositionByName(name) {
-    const { x, y } = document.getElementById(name).getBoundingClientRect();
+  //     this.setState({ edges: edges, nodeStates:nodeStates });
+  //   }
+  // }
 
-    const nodeStateObject = {
-      x,
-      y,
-      name,
-    };
-    return nodeStateObject;
-  }
+  // calculateNodePositionByName(name){
+    // const { x, y } = document
+    // .getElementById(name)
+    // .getBoundingClientRect();
 
-  renderLines() {
-    return <svg>{this.state.edges}</svg>;
-  }
+    // const {x,y} = getSvgCoordinates(); - MAPPING FUNCTION TO MAP DOCUMENT COORDINATES TO PARENT SVG COORDINATES
 
-  componentDidMount() {
-    if (this.state.edges.length > 0) {
-      if (!this.state.edgesRendered) {
-        // Edges have been computed, render them; set edgesRendered = true
-      } else {
-        // Edges have already been rendered
-      }
-    } else {
-      this.computeEdges();
-    }
-  }
+    // WORST CASE SCENARIO
+    // ------------------
+    // If state is not accessible where the line is to be drawn, calc. lines using number of layers
+    // and the array of no. of nodes in Playground.js
 
-  addLayerComp(name, ref) {
-    return <Layer name={name} ref={ref}></Layer>;
-  }
 
-  addLayer() {
-    var stateObject = {};
-    stateObject["hidLayersCount"] = Math.min(6, this.state.hidLayersCount + 1);
+  //   const nodeStateObject = {
+  //     x,
+  //     y,
+  //     name
+  //   }
+  //   console.log(nodeStateObject)
+  //   return nodeStateObject
+  // }
 
-    if (stateObject["hidLayersCount"] < 6) {
-      var hidLayers = this.state.hidLayers;
-      var hidLayersRefs = this.state.hidLayersRefs;
+  // renderLines() {
+  //   return <svg>{this.state.edges}</svg>;
+  // }
 
-      var newLayerName = "hidLayer_" + stateObject["hidLayersCount"];
-      var newLayerRef = React.createRef();
+  // componentDidMount() {
+  //   if (this.state.edges.length > 0) {
+  //     if (!this.state.edgesRendered) {
+  //       // Edges have been computed, render them; set edgesRendered = true
+  //     } else {
+  //       // Edges have already been rendered
+  //     }
+  //   } else {
+  //     this.computeEdges();
+  //   }
+  // }
 
-      hidLayers.push(this.addLayerComp(newLayerName, newLayerRef));
-      hidLayersRefs.push(newLayerRef);
+  // addLayerComp(name, ref) {
+  //   return <Layer name={name} ref={ref}></Layer>;
+  // }
 
-      stateObject["hidLayersRefs"] = hidLayersRefs;
-      stateObject["hidLayers"] = hidLayers;
+  // addLayer() {
+  //   var stateObject = {};
+  //   stateObject["hidLayersCount"] = Math.min(6, this.state.hidLayersCount + 1);
 
-      // So that edges are recomputed
-      stateObject["edges"] = [];
-      stateObject["edgesRendered"] = false;
-      this.setState(stateObject);
-    }
-  }
+  //   if (stateObject["hidLayersCount"] < 6) {
+  //     var hidLayers = this.state.hidLayers;
+  //     var hidLayersRefs = this.state.hidLayersRefs;
 
-  removeLayer() {
-    var stateObject = {};
-    if (this.state.hidLayersCount > 0) {
-      stateObject["hidLayersCount"] = this.state.hidLayersCount - 1;
-      var hidLayers = this.state.hidLayers;
-      var hidLayersRefs = this.state.hidLayersRefs;
-      hidLayersRefs.pop();
-      hidLayers.pop();
-      stateObject["hidLayers"] = hidLayers;
-      stateObject["hidLayersRefs"] = hidLayersRefs;
+  //     var newLayerName = "hidLayer_" + stateObject["hidLayersCount"];
+  //     var newLayerRef = React.createRef();
 
-      // So that edges are recomputed
-      stateObject["edges"] = [];
-      stateObject["edgesRendered"] = false;
-      this.setState(stateObject);
-    }
-  }
+  //     hidLayers.push(this.addLayerComp(newLayerName, newLayerRef));
+  //     hidLayersRefs.push(newLayerRef);
+
+  //     stateObject["hidLayersRefs"] = hidLayersRefs;
+  //     stateObject["hidLayers"] = hidLayers;
+
+  //     // So that edges are recomputed
+  //     stateObject["edges"] = [];
+  //     stateObject["edgesRendered"] = false;
+  //     this.setState(stateObject);
+  //   }
+  // }
+
+  // removeLayer() {
+  //   var stateObject = {};
+  //   if (this.state.hidLayersCount > 0) {
+  //     stateObject["hidLayersCount"] = this.state.hidLayersCount - 1;
+  //     var hidLayers = this.state.hidLayers;
+  //     var hidLayersRefs = this.state.hidLayersRefs;
+  //     hidLayersRefs.pop();
+  //     hidLayers.pop();
+  //     stateObject["hidLayers"] = hidLayers;
+  //     stateObject["hidLayersRefs"] = hidLayersRefs;
+
+  //     // So that edges are recomputed
+  //     stateObject["edges"] = [];
+  //     stateObject["edgesRendered"] = false;
+  //     this.setState(stateObject);
+  //   }
+  // }
 
   render() {
-    console.log(this.state.nodeStates);
+
+    {/*
+
+      // show i/p layer
+
+
+      if(props.layers>0){
+        // show  hidden layer
+      }
+
+      // show o/p layer
+
+    */}
+
     return (
-      <div>
-        <Grid
-          container
-          style={{
-            //backgroundColor: "#ee3eee",
-            height: "6vh",
-            width: "100vw",
-          }}
-          justify="center"
-          alignItems="center"
-        >
-          <Grid item xs>
-            <IconButton onClick={() => this.addLayer()}>
-              <Icon
-                style={{
-                  color: "#546e7a",
-                }}
-              >
-                add_circle
-              </Icon>
-            </IconButton>
-          </Grid>
-          <Grid item xs>
-            <IconButton onClick={() => this.removeLayer()}>
-              <Icon
-                style={{
-                  color: "#546e7a",
-                }}
-              >
-                remove_circle
-              </Icon>
-            </IconButton>
-          </Grid>
-          <Grid item xs>
-            <Typography>
-              {this.state.hidLayerCount} Hidden layerNames
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          style={{
-            height: "35vw",
-            width: "100vw",
-            //backgroundColor: "#4d164d",
-          }}
-          justify="center"
-          alignItems="center"
-        >
-          {this.state.inputLayer}
-          {/* { Why not create a layer component?} */}
-          {this.state.hidLayers.map((layer, index) => (
-            <React.Fragment key={index}>{layer}</React.Fragment>
-          ))}
-          {this.state.outputLayer}
-          {console.log(this.state.edges)}
-          <svg>
-            {/* {this.state.edges.map((edge, index) => {
-              return edge;
-            })} */}
-            <line x1="-107" y1="-100" x2="1000" y2="2000" stroke="black"></line>
-          </svg>
-        </Grid>
-      </div>
+      // Layer
+      // Return <svg height={} width={}><Layer name={input} nodeCount={}/></svg>
+      // Return <svg height={} width={}><Layer name={hidden} nodeCount={}/></svg>
+      // Return <svg height={} width={}><Layer name={output} nodeCount={}/></svg>
+
+      // <svg /** svg for i/p layer */>
+          //   <line x1="100" y1="0" x2="1000" y2="2000" stroke="black"/ >
+          // </svg>
+
+
+          // {/* dynamic hidden layers generated based on props */}
+
+          // <svg /** svg for o/p layer */>
+          //   <line x1="100" y1="0" x2="1000" y2="2000" stroke="black"/ >
+          // </svg>
+    //);
+
     );
   }
 }

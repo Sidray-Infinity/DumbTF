@@ -19,6 +19,9 @@ export default class Playground extends Component {
       activation: act[0].label,
       problemType: probType[0].label,
       networkRef: React.createRef(),
+      // add state for buttons , array?
+      // state for layer params aka buttons as well i.e. to change node count in a layer
+      layerCount: [1]
     };
   }
 
@@ -175,10 +178,15 @@ export default class Playground extends Component {
               </TextField>
             </Grid>
           </Grid>
-          
+
+          {/*DISPLAY GRID HERE FOR CONTROLLING NETWORK PARAMS AKA BUTTONS WHICH IS DISPLAYED BASED ON LAYER STATE*/}
+
           {/* DEFINING NETWORK */}
-          <Network ref={this.state.networkRef}></Network>
-          {console.log(this.state.networkRef)}
+
+          {/* nodeCount prop is  an array of node counts, required in Layer.js to render <Node/> */}
+          <svg width="100%" height="100%">
+            <Network ref={this.state.networkRef} nodeCount={[4,6]} inputLayerCount={}/>
+          </svg>
         </Grid>
       </div>
     );
