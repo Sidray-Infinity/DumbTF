@@ -23,8 +23,6 @@ export default class Layer extends Component {
   }
 
   addNode() {
-    // TODO : Refactor to the format used in Network
-
     var stateObject = {};
     stateObject["nodesCount"] = Math.min(10, this.state.nodesCount + 1);
     if (stateObject["nodesCount"] < 10) {
@@ -58,7 +56,7 @@ export default class Layer extends Component {
   }
 
   render() {
-
+    console.log(this.state.nodeState);
     return (
       <div>
         <Grid

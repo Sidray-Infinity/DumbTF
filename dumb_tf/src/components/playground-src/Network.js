@@ -201,10 +201,10 @@ export default class Network extends Component {
           {this.state.outputLayer}
           {console.log(this.state.edges)}
           <svg>
-            {this.state.edges.map((edge, index) => {
+            {/* {this.state.edges.map((edge, index) => {
               return edge;
-            })}
-            <line x1="0" y1="0" x2="1000" y2="2000" stroke="black"></line>
+            })} */}
+            <line x1="-107" y1="-100" x2="1000" y2="2000" stroke="black"></line>
           </svg>
         </Grid>
       </div>
