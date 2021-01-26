@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+dumb_tf/.vscode/
 thoughts.md
 *.ipynb
 dumb_tf/node_modules/

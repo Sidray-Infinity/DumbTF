@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "./assets/logo.png"
+import logo from "./assets/logo.png";
 function NavBar() {
   const [isOpen, setOpen] = useState(false);
   const navBarOptions = [
@@ -47,9 +47,11 @@ function NavBar() {
 
           <Typography variant="h6" style={{ flex: 1 }}>
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={logo} width="80px"
-              height="60px"
-              style={{marginTop:"10px"}}
+              <img
+                alt="logo"
+                src={logo}
+                width="120px"
+                height="90px"
               />
             </Link>
           </Typography>
