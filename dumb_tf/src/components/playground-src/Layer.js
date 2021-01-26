@@ -8,8 +8,14 @@ export default class Layer extends Component {
     nodesCount: 2,
     nodes: ["node:1", "node:2"],
     nodeRefs: [React.createRef(), React.createRef()],
-    nodeState: []
+    nodePosition: [],
   };
+
+
+  // calculateNodePosition and append in nodePosition[]
+  // fn(){
+
+  //}
 
   addNode() { // should we store node component here?
     var stateObject = {};
@@ -48,63 +54,11 @@ export default class Layer extends Component {
   // }
 
   render() {
-    var allNodes = [];
-    for (let i = 0; i < this.state.nodesCount; i++)
-      allNodes.push(
-        <Node
-          name={this.props.name + "-" + this.state.nodes[i]}
-          ref={this.state.nodeRefs[i]}
-        ></Node>
-      );
 
     return (
-      <div>
-        <Grid
-          container
-          style={{
-            //backgroundColor: "#90c8ea",
-            height: "60vh",
-            width: "10vw",
-          }}
-          justify="center"
-        >
-          <Grid
-            justify="center"
-            container
-            style={{ //backgroundColor: "#ffc8ea",
-            height: "5vh", width: "10vw" }}
-          >
-            <Grid item>
-              <IconButton onClick={() => this.addNode()}>
-                <Icon
-                  style={{
-                    color: "#546e7a",
-                  }}
-                >
-                  add_circle
-                </Icon>
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => this.removeNode()}>
-                <Icon
-                  style={{
-                    color: "#546e7a",
-                  }}
-                >
-                  remove_circle
-                </Icon>
-              </IconButton>
-            </Grid>
-          </Grid>
-
-          <Grid item style={{ //backgroundColor: "#f46e7f"
-          }}>
-            {allNodes}
-          </Grid>
-          {}
-        </Grid>
-      </div>
+      // state = nodeCount, which we get from props above
+      // for(node in nodeCount)
+      // return <svg><Node calcNodePos={fn}/></svg>
     );
   }
 }
