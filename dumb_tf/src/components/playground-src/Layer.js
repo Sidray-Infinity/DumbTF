@@ -3,6 +3,7 @@ import { Grid, IconButton, Icon } from "@material-ui/core";
 import Node from "../playground-src/Node";
 
 export default class Layer extends Component {
+
   state = {
     name: this.props.name,
     nodesCount: 2,
@@ -18,14 +19,19 @@ export default class Layer extends Component {
   //}
 
   addNode() { // should we store node component here?
+
     var stateObject = {};
     stateObject["nodesCount"] = Math.min(10, this.state.nodesCount + 1);
     if (stateObject["nodesCount"] < 10) {
       var nodes = this.state.nodes;
       var nodeRefs = this.state.nodeRefs;
+
+      var newNodeRef = React.createRef();
       var newNodeName = "node:" + stateObject["nodesCount"];
-      nodes.push(newNodeName);
-      nodeRefs.push(React.createRef());
+
+      nodes.push(this.addNodeComp(newNodeName, newNodeRef));
+      nodeRefs.push(newNodeRef);
+
       stateObject["nodes"] = nodes;
       stateObject["nodeRefs"] = nodeRefs;
       this.setState(stateObject);
@@ -46,19 +52,14 @@ export default class Layer extends Component {
     }
   }
 
-  // componentDidMount() {
-  //   console.log(this.state.name);
-  //   this.state.nodeRefs.forEach((x, i) => {
-  //     console.log(x.current);
-  //   });
-  // }
-
   render() {
+
 
     return (
       // state = nodeCount, which we get from props above
       // for(node in nodeCount)
       // return <svg><Node calcNodePos={fn}/></svg>
+
     );
   }
 }

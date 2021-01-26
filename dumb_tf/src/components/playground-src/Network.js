@@ -3,6 +3,7 @@ import { Grid, IconButton, Icon, Typography } from "@material-ui/core";
 import Layer from "../playground-src/Layer";
 
 export default class Network extends Component {
+
   // constructor() {
   //   super();
   //   var inputLayerRef = React.createRef();
@@ -154,6 +155,7 @@ export default class Network extends Component {
 
       // show i/p layer
 
+
       if(props.layers>0){
         // show  hidden layer
       }
@@ -172,12 +174,14 @@ export default class Network extends Component {
           //   <line x1="100" y1="0" x2="1000" y2="2000" stroke="black"/ >
           // </svg>
 
+
           // {/* dynamic hidden layers generated based on props */}
 
           // <svg /** svg for o/p layer */>
           //   <line x1="100" y1="0" x2="1000" y2="2000" stroke="black"/ >
           // </svg>
     //);
+
     );
   }
 }
