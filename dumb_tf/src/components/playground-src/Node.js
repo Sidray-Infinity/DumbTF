@@ -3,23 +3,6 @@ import { Grid } from "@material-ui/core";
 
 export default class Node extends Component {
 
-  constructor() {
-    super();
-    this.state = {
-      name: null,
-      x: -1,
-      y: -1,
-    };
-  }
-  
-
-  componentDidMount() {
-    const { x, y } = document
-      .getElementById(this.props.name)
-      .getBoundingClientRect();
-    this.setState({ x: x, y: y, name: this.props.name });
-  }
-
   render() {
     return (
       <div id={this.props.name}>
