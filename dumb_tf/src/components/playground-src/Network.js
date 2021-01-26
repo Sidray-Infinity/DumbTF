@@ -21,7 +21,7 @@ export default class Network extends Component {
       edges: [],
       edgesRendered: false,
 
-      nodeStates:[]
+      nodeStates: [],
     };
   }
 
@@ -55,28 +55,28 @@ export default class Network extends Component {
       const nodeStates = [];
 
       // calculate position of node by name for input layer
-      for(let i=0; i<ipNodeRefs.length; i++)
-        nodeStates.push( this.calculateNodePositionByName(ipNodeRefs[i].current.props.name))
-      for(let j=0; j<opNodeRefs.length; j++)
-        nodeStates.push( this.calculateNodePositionByName(opNodeRefs[j].current.props.name))
+      for (let i = 0; i < ipNodeRefs.length; i++)
+        nodeStates.push(
+          this.calculateNodePositionByName(ipNodeRefs[i].current.props.name)
+        );
+      for (let j = 0; j < opNodeRefs.length; j++)
+        nodeStates.push(
+          this.calculateNodePositionByName(opNodeRefs[j].current.props.name)
+        );
 
-      this.setState({ edges: edges, nodeStates:nodeStates });
+      this.setState({ edges: edges, nodeStates: nodeStates });
     }
   }
 
-  calculateNodePositionByName(name){
-    const { x, y } = document
-    .getElementById(name)
-    .getBoundingClientRect();
-
+  calculateNodePositionByName(name) {
+    const { x, y } = document.getElementById(name).getBoundingClientRect();
 
     const nodeStateObject = {
       x,
       y,
-      name
-    }
-    console.log(nodeStateObject)
-    return nodeStateObject
+      name,
+    };
+    return nodeStateObject;
   }
 
   renderLines() {
@@ -142,8 +142,7 @@ export default class Network extends Component {
   }
 
   render() {
-
-    console.log(this.state.nodeStates)
+    console.log(this.state.nodeStates);
     return (
       <div>
         <Grid
@@ -207,7 +206,6 @@ export default class Network extends Component {
             })}
             <line x1="0" y1="0" x2="1000" y2="2000" stroke="black"></line>
           </svg>
-
         </Grid>
       </div>
     );

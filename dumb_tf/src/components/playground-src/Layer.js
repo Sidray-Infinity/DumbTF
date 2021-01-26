@@ -3,23 +3,40 @@ import { Grid, IconButton, Icon } from "@material-ui/core";
 import Node from "../playground-src/Node";
 
 export default class Layer extends Component {
-  state = {
-    name: this.props.name,
-    nodesCount: 2,
-    nodes: ["node:1", "node:2"],
-    nodeRefs: [React.createRef(), React.createRef()],
-    nodeState: []
-  };
+  constructor() {
+    super();
+    var nodeRefs = [React.createRef(), React.createRef()];
+    this.state = {
+      name: null,
+      nodesCount: 2,
+      nodes: [
+        this.addNodeComp("node:1", nodeRefs[0]),
+        this.addNodeComp("node:2", nodeRefs[1]),
+      ],
+      nodeRefs: nodeRefs,
+      nodeState: [],
+    };
+  }
 
-  addNode() { // should we store node component here?
+  addNodeComp(name, ref) {
+    return <Node name={name} ref={ref}></Node>;
+  }
+
+  addNode() {
+    // TODO : Refactor to the format used in Network
+
     var stateObject = {};
     stateObject["nodesCount"] = Math.min(10, this.state.nodesCount + 1);
     if (stateObject["nodesCount"] < 10) {
       var nodes = this.state.nodes;
       var nodeRefs = this.state.nodeRefs;
+
+      var newNodeRef = React.createRef();
       var newNodeName = "node:" + stateObject["nodesCount"];
-      nodes.push(newNodeName);
-      nodeRefs.push(React.createRef());
+
+      nodes.push(this.addNodeComp(newNodeName, newNodeRef));
+      nodeRefs.push(newNodeRef);
+
       stateObject["nodes"] = nodes;
       stateObject["nodeRefs"] = nodeRefs;
       this.setState(stateObject);
@@ -40,22 +57,7 @@ export default class Layer extends Component {
     }
   }
 
-  // componentDidMount() {
-  //   console.log(this.state.name);
-  //   this.state.nodeRefs.forEach((x, i) => {
-  //     console.log(x.current);
-  //   });
-  // }
-
   render() {
-    var allNodes = [];
-    for (let i = 0; i < this.state.nodesCount; i++)
-      allNodes.push(
-        <Node
-          name={this.props.name + "-" + this.state.nodes[i]}
-          ref={this.state.nodeRefs[i]}
-        ></Node>
-      );
 
     return (
       <div>
@@ -71,8 +73,11 @@ export default class Layer extends Component {
           <Grid
             justify="center"
             container
-            style={{ //backgroundColor: "#ffc8ea",
-            height: "5vh", width: "10vw" }}
+            style={{
+              //backgroundColor: "#ffc8ea",
+              height: "5vh",
+              width: "10vw",
+            }}
           >
             <Grid item>
               <IconButton onClick={() => this.addNode()}>
@@ -98,9 +103,17 @@ export default class Layer extends Component {
             </Grid>
           </Grid>
 
-          <Grid item style={{ //backgroundColor: "#f46e7f"
-          }}>
-            {allNodes}
+          <Grid
+            item
+            style={
+              {
+                //backgroundColor: "#f46e7f"
+              }
+            }
+          >
+            {this.state.nodes.map((node, index) => (
+              <React.Fragment key={index}>{node}</React.Fragment>
+            ))}
           </Grid>
           {}
         </Grid>
