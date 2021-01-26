@@ -43,7 +43,7 @@ export default class Network extends Component {
         }
 
         if (index === this.state.hidLayers.length - 1) {
-          // Make lines with output layer
+          // Make lines with output
         } else {
           // Inter hidden layer connections
         }
