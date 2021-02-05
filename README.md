@@ -14,8 +14,6 @@ A deep learning library for dumb people.
 ## Installation
 `pip install Dumb-TF`
 
-Doesn't work though. Have patience. Was just learning to make packages.
-
 ## Status 
 ---
 - ### Regression (Boston Housing Dataset)
