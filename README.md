@@ -85,6 +85,8 @@ A deep learning library for dumb people.
 - https://brilliant.org/wiki/backpropagation/#$
 - https://towardsdatascience.com/batch-mini-batch-stochastic-gradient-descent-
 - https://www.youtube.com/watch?v=i94OvYb6noo
+- https://aimatters.wordpress.com/2020/06/14/derivative-of-softmax-layer/
+- https://towardsdatascience.com/deriving-the-backpropagation-equations-from-scratch-part-1-343b300c585a
 
 ### For Convolutions
 * https://www.sicara.ai/blog/2019-10-31-convolutional-layer-convolution-kernel
