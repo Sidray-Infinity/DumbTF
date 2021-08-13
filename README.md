@@ -18,7 +18,7 @@ A deep learning library for dumb people.
 ---
 - ### Regression (Boston Housing Dataset)
     Network Architecture
-    ```python
+    ```python 
     model = Model()
     model.add(Dense(128, input_shape=13, activation='relu'))
     model.add(Dense(64, input_shape=128, activation='relu'))
