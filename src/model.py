@@ -1,9 +1,9 @@
-from .Layer import Dense, Layer
 import numpy as np
-from copy import copy
-from .Losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
-from .Optimizer import SGD, MiniBatchGD
-from tqdm import trange, tqdm
+from tqdm import trange
+
+from loss_functions.losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
+from optimizers.optimizer import SGD, MiniBatchGD
+
 
 class Model(object):
 	def __init__(self):

@@ -2,11 +2,11 @@
      alt="logo"
      style="height: 180px; width: 200px;" /></p>
 
-# DumbTF
+DumbTF
 ---
 A deep learning library for dumb people. 
 
-## Focus
+Focus
 ---
 - Implement additional layers, to be used along with convolutions
 - Convolutions are still slow, despite using the numpy stride trick and einsum.
