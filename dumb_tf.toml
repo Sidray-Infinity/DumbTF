@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "dumb_tf_Sidray-Infinity"
 version = "0.0.1"
 authors = [
-  { name="Siddharth Panda", email="sidkiit12@gmail.com" },
+    { name = "Siddharth Panda", email = "sidkiit12@gmail.com" },
 ]
 description = "A small example package"
 readme = "README.md"

@@ -1,6 +1,7 @@
-from layer import Layer
-from activation.activations import ReLU, Sigmoid, Linear, Softmax
 import numpy as np
+
+from activation.activations import ReLU, Sigmoid, Linear, Softmax
+from layer import Layer
 
 
 class Conv2D(Layer):
