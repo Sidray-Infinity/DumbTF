@@ -1,16 +1,16 @@
 import numpy as np
 from tqdm import trange
 
-from loss_functions.losses import MAE, MSE, CategoricalCrossEntroy, BinaryCrossEntropy
-from optimizers.optimizer import SGD, MiniBatchGD
+from dumbtf.loss_functions.losses import MAE, MSE, CategoricalCrossEntropy, BinaryCrossEntropy, LossFunc
+from dumbtf.optimizers.optimizer import SGD, MiniBatchGD, Optimizer
 
 
 class Model(object):
     def __init__(self):
         super().__init__()
         self.layers = []
-        self.optimizer = None
-        self.loss_func = None
+        self.optimizer: Optimizer = None
+        self.loss_func: LossFunc = None
 
     def add(self, layer):
         if len(self.layers) >= 1:
@@ -21,7 +21,7 @@ class Model(object):
         self.loss_func = {
             "mae": MAE(),
             "mse": MSE(),
-            "cce": CategoricalCrossEntroy(),
+            "cce": CategoricalCrossEntropy(),
             "bce": BinaryCrossEntropy()
         }[loss]
 
@@ -104,5 +104,5 @@ class Model(object):
         return ret
 
     def __iter__(self):
-        for l in self.layers:
-            yield l
+        for layer in self.layers:
+            yield layer

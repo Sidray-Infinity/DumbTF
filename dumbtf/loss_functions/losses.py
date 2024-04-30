@@ -1,13 +1,15 @@
 import numpy as np
 
+from dumbtf.loss_functions import LossFunc
 
-class MAE(object):
+
+class MAE(LossFunc):
     def __init__(self, y_true=None, y_pred=None):
-
         super().__init__()
         self.y_pred = y_pred
         self.y_true = y_true
 
+    @staticmethod
     def der(self, y_true, y_pred):
         ret = np.ones(y_pred.shape)
         for i in range(y_pred.shape[0]):
@@ -19,7 +21,7 @@ class MAE(object):
         return abs(y_true - y_pred)
 
 
-class BinaryCrossEntropy(object):
+class BinaryCrossEntropy(LossFunc):
     def __init__(self):
         pass
 
@@ -29,15 +31,16 @@ class BinaryCrossEntropy(object):
 
         return -np.log(1 - y_pred[0])
 
+    @staticmethod
     def der(self, y_true, y_pred):
         return (y_pred[0] - y_true) / (y_pred[0] - y_pred[0] * y_pred[0])
 
 
-class CategoricalCrossEntroy(object):
-
+class CategoricalCrossEntropy(LossFunc):
     def __init__(self, y_true=None, y_pred=None):
         super().__init__()
 
+    @staticmethod
     def der(self, y_true, y_pred):
 
         res = np.zeros_like(y_true)
@@ -58,12 +61,13 @@ class CategoricalCrossEntroy(object):
         return -np.log(y_pred[np.argmax(y_true)])
 
 
-class MSE(object):
+class MSE(LossFunc):
     def __init__(self, y_true=None, y_pred=None):
         super().__init__()
         self.y_pred = y_pred
         self.y_true = y_true
 
+    @staticmethod
     def der(self, y_true, pred):
         return np.asarray(pred - y_true)
 

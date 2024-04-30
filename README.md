@@ -10,6 +10,7 @@ Focus
 ---
 
 - Implement additional layers, to be used along with convolutions
+- Explore LAMB : https://towardsdatascience.com/an-intuitive-understanding-of-the-lamb-optimizer-46f8c0ae4866
 - Convolutions are still slow, despite using the numpy stride trick and einsum.
 
 ## Installation

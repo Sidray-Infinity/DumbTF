@@ -1,7 +1,9 @@
 import numpy as np
 
+from dumbtf.activation import Activation
 
-class ReLU(object):
+
+class ReLU(Activation):
     def __init__(self):
         super().__init__()
 
@@ -17,7 +19,7 @@ class ReLU(object):
         return 'ReLU '
 
 
-class Linear(object):
+class Linear(Activation):
     def __init__(self):
         super().__init__()
 
@@ -31,7 +33,7 @@ class Linear(object):
         return 'Linear '
 
 
-class Sigmoid(object):
+class Sigmoid(Activation):
     def __init__(self):
         super().__init__()
 
@@ -61,7 +63,7 @@ class Sigmoid(object):
         return 'Sigmoid '
 
 
-class Softmax(object):
+class Softmax(Activation):
     def __init__(self, ):
         super().__init__()
 

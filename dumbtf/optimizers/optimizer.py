@@ -1,4 +1,9 @@
-class MiniBatchGD(object):
+class Optimizer(object):
+    def __init__(self):
+        pass
+
+
+class MiniBatchGD(Optimizer):
     def __init__(self, layers, lr):
         super().__init__()
         self.lr = lr
@@ -16,7 +21,7 @@ class MiniBatchGD(object):
             layer.backward(self.lr, batch_size)
 
 
-class SGD(object):
+class SGD(Optimizer):
     def __init__(self):
         super().__init__()
 

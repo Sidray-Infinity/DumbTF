@@ -1,7 +1,7 @@
 import numpy as np
 
 from activation.activations import ReLU, Sigmoid, Linear, Softmax
-from layer import Layer
+from dumbtf.layer import Layer
 
 
 class Conv2D(Layer):
@@ -14,9 +14,7 @@ class Conv2D(Layer):
         self.filters = filters
         self.k = kernel_size
 
-        if isinstance(stride, int):
-            stride = (stride, stride)
-        self.stride = stride
+        self.stride = (stride, stride) if isinstance(stride, int) else stride
 
         self.depth = input_shape[2]  # Channel last
         self.activation = {
@@ -110,7 +108,7 @@ class Conv2D(Layer):
 
     def update_gradients(self, error):
 
-        if self.prev_layer == None:
+        if self.prev_layer is None:
             return
 
         # ************************* LOOKS UGLY : TRY REFACTORING IT *************************

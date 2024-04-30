@@ -1,7 +1,7 @@
 import numpy as np
 
-from activation.activations import ReLU, Sigmoid, Linear, Softmax
-from layer import Layer
+from dumbtf.activation import ReLU, Sigmoid, Linear, Softmax
+from dumbtf.layer import Layer
 
 
 class Dense(Layer):
